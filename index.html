@@ -3,20 +3,22 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-<title>삐뽀삐뽀 119 · 이유식 자동 계산기 (석이네)</title>
+<title>삐뽀삐뽀 119 · 이유식 자동 계산기 & 식재료 백과 (석이네)</title>
 <style>
   :root {
-    --bg: #f6f8fb;
+    --bg: #f5f7fb;
     --card: #ffffff;
     --navy: #1e3a5f;
     --blue: #2563eb;
     --blue-soft: #eff6ff;
-    --green: #16a34a;
+    --green: #15803d;
     --green-soft: #f0fdf4;
     --red: #dc2626;
     --red-soft: #fef2f2;
-    --amber: #d97706;
+    --amber: #b45309;
     --amber-soft: #fffbeb;
+    --purple: #6d28d9;
+    --purple-soft: #f5f3ff;
     --text: #0f172a;
     --muted: #64748b;
     --border: #e2e8f0;
@@ -28,56 +30,57 @@
     background: var(--bg);
     color: var(--text);
     line-height: 1.5;
-    padding-bottom: 48px;
+    padding-bottom: 56px;
   }
   .header {
-    background: linear-gradient(135deg, #1e3a5f 0%, #2c5282 100%);
+    background: linear-gradient(135deg, #1e3a5f 0%, #2b5282 100%);
     color: #fff;
-    padding: 24px 18px 20px;
+    padding: 22px 16px 18px;
   }
   .header .badge {
     display: inline-block;
     background: rgba(255,255,255,0.18);
     padding: 4px 10px;
     border-radius: 999px;
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 11.5px;
+    font-weight: 700;
     margin-bottom: 8px;
   }
   .header h1 {
-    margin: 0 0 6px;
-    font-size: 21px;
+    margin: 0 0 5px;
+    font-size: 20px;
     font-weight: 800;
     letter-spacing: -0.3px;
   }
   .header p {
     margin: 0;
-    font-size: 13px;
+    font-size: 12.5px;
     color: #cbd5e1;
   }
   .container {
-    max-width: 560px;
+    max-width: 600px;
     margin: 0 auto;
-    padding: 14px;
+    padding: 12px;
   }
   .tabs {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 6px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
     background: #e2e8f0;
     padding: 4px;
     border-radius: 12px;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
   }
   .tab-btn {
     border: none;
     background: transparent;
-    padding: 10px 6px;
+    padding: 9px 4px;
     border-radius: 9px;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     color: #475569;
     cursor: pointer;
+    word-break: keep-all;
   }
   .tab-btn.active {
     background: #fff;
@@ -88,21 +91,46 @@
     background: var(--card);
     border: 1px solid var(--border);
     border-radius: 16px;
-    padding: 16px;
+    padding: 15px;
     margin-bottom: 12px;
     box-shadow: 0 2px 8px rgba(15,23,42,0.03);
   }
-  .input-title {
-    font-size: 14px;
+  .sec-title {
+    font-size: 13.5px;
     font-weight: 800;
     color: var(--navy);
-    margin: 0 0 12px;
+    margin: 0 0 10px;
+  }
+  .date-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-bottom: 12px;
+    background: #f8fafc;
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  .date-row label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #475569;
+    white-space: nowrap;
+  }
+  .date-row input[type="date"] {
+    flex: 1;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 5px 8px;
+    font-size: 13px;
+    background: #fff;
+    color: var(--text);
   }
   .day-row {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
   .day-btn {
     width: 42px;
@@ -123,20 +151,20 @@
     background: #fffbeb;
     border: 2px solid #f59e0b;
     border-radius: 12px;
-    padding: 6px 12px;
+    padding: 5px 10px;
   }
   .day-input-wrap input {
     width: 72px;
     border: none;
     background: transparent;
-    font-size: 24px;
+    font-size: 23px;
     font-weight: 800;
     color: var(--text);
     text-align: center;
     outline: none;
   }
   .day-input-wrap span {
-    font-size: 15px;
+    font-size: 14px;
     font-weight: 700;
     color: #92400e;
   }
@@ -145,25 +173,22 @@
     accent-color: var(--navy);
     margin-bottom: 12px;
   }
-  .month-pills {
+  .pills {
     display: flex;
     gap: 6px;
     flex-wrap: wrap;
   }
-  .month-pill {
-    flex: 1;
-    min-width: 64px;
-    padding: 8px 6px;
-    border-radius: 10px;
+  .pill {
+    padding: 7px 10px;
+    border-radius: 999px;
     border: 1px solid var(--border);
     background: #f8fafc;
     font-size: 12px;
     font-weight: 700;
     color: #475569;
     cursor: pointer;
-    text-align: center;
   }
-  .month-pill.active {
+  .pill.active {
     background: var(--navy);
     color: #fff;
     border-color: var(--navy);
@@ -187,7 +212,7 @@
   }
   .stage-banner h2 {
     margin: 0;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 800;
     color: var(--navy);
   }
@@ -204,7 +229,7 @@
     padding: 12px;
   }
   .stat-box .lbl {
-    font-size: 12px;
+    font-size: 11.5px;
     font-weight: 700;
     color: var(--muted);
     margin-bottom: 4px;
@@ -228,14 +253,14 @@
   }
   .warn-box h3 {
     margin: 0 0 8px;
-    font-size: 14px;
+    font-size: 13.5px;
     font-weight: 800;
     color: var(--red);
   }
   .warn-box ul {
     margin: 0;
     padding-left: 18px;
-    font-size: 13px;
+    font-size: 12.5px;
     color: #7f1d1d;
   }
   .warn-box li { margin-bottom: 4px; }
@@ -243,18 +268,65 @@
     background: var(--amber-soft);
     border: 1px solid #fde68a;
     border-radius: 14px;
-    padding: 13px;
-    font-size: 13px;
+    padding: 12px;
+    font-size: 12.5px;
     color: #78350f;
+    margin-bottom: 12px;
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .field label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #475569;
+    margin-bottom: 4px;
+  }
+  .field input, .field select {
+    width: 100%;
+    padding: 9px 10px;
+    border-radius: 10px;
+    border: 1px solid #cbd5e1;
+    font-size: 14px;
+    font-weight: 700;
+    background: #fff;
+    color: var(--text);
+  }
+  .result-highlight {
+    background: var(--green-soft);
+    border: 1px solid #bbf7d0;
+    border-radius: 14px;
+    padding: 14px;
+    margin-top: 10px;
+  }
+  .result-highlight .big {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--green);
+    margin-bottom: 4px;
+  }
+  .result-highlight .detail {
+    font-size: 12.5px;
+    color: #14532d;
   }
   .search-input {
     width: 100%;
     padding: 10px 12px;
     border-radius: 10px;
-    border: 1px solid var(--border);
+    border: 1px solid #cbd5e1;
     font-size: 14px;
     margin-bottom: 10px;
     outline: none;
+  }
+  .food-count {
+    font-size: 12px;
+    color: var(--muted);
+    margin: 8px 0 4px;
+    font-weight: 700;
   }
   .food-item {
     border-bottom: 1px solid #f1f5f9;
@@ -265,57 +337,64 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 8px;
     margin-bottom: 4px;
   }
   .food-name { font-weight: 800; font-size: 14px; }
-  .food-when {
+  .badge-when {
     font-size: 11px;
     font-weight: 700;
     padding: 2px 8px;
     border-radius: 999px;
-    background: var(--green-soft);
-    color: var(--green);
+    white-space: nowrap;
   }
-  .food-when.warn {
-    background: var(--red-soft);
-    color: var(--red);
-  }
+  .b-early { background: var(--green-soft); color: var(--green); }
+  .b-mid { background: var(--blue-soft); color: var(--blue); }
+  .b-late { background: var(--purple-soft); color: var(--purple); }
+  .b-done { background: var(--amber-soft); color: var(--amber); }
+  .b-ban { background: var(--red-soft); color: var(--red); }
   .food-desc { font-size: 12.5px; color: #475569; }
   .stage-card {
     border-left: 4px solid var(--navy);
     padding-left: 12px;
     margin-bottom: 14px;
   }
-  .stage-card h4 { margin: 0 0 4px; font-size: 15px; color: var(--navy); }
-  .stage-card p { margin: 2px 0; font-size: 13px; color: #334155; }
+  .stage-card h4 { margin: 0 0 4px; font-size: 14.5px; color: var(--navy); }
+  .stage-card p { margin: 2px 0; font-size: 12.5px; color: #334155; }
   .hidden { display: none; }
   .footer {
     text-align: center;
-    font-size: 12px;
+    font-size: 11.5px;
     color: var(--muted);
-    margin-top: 16px;
+    margin-top: 14px;
   }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="badge">삐뽀삐뽀 119 이유식 · 개정 지침</div>
-  <h1>석이네 이유식 자동 계산기</h1>
-  <p>이유식 몇 일차인지 입력하면 권장량·수유량·주의사항이 바로 뜹니다</p>
+  <div class="badge">삐뽀삐뽀 119 · 대한소아청소년과학회 기준</div>
+  <h1>석이네 이유식 계산기 &amp; 식재료 백과</h1>
+  <p>일차별 권장량 · N배죽 물양 계산 · 66종 식재료 검색까지 한 번에</p>
 </div>
 
 <div class="container">
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab('calc', this)">오늘 계산기</button>
-    <button class="tab-btn" onclick="switchTab('stage', this)">시기별 총정리</button>
-    <button class="tab-btn" onclick="switchTab('food', this)">식재료 검색</button>
+    <button class="tab-btn" onclick="switchTab('ratio', this)">배죽·물양</button>
+    <button class="tab-btn" onclick="switchTab('food', this)">식재료 백과</button>
+    <button class="tab-btn" onclick="switchTab('stage', this)">시기별 표</button>
   </div>
 
-  <!-- TAB 1: 계산기 -->
+  <!-- TAB 1: 오늘 계산기 -->
   <div id="tab-calc">
     <div class="card">
-      <div class="input-title">이유식 시작한 지 몇 일차인가요?</div>
+      <div class="date-row">
+        <label for="startDate">이유식 시작일</label>
+        <input type="date" id="startDate" onchange="calcFromStartDate()" />
+      </div>
+
+      <div class="sec-title">이유식 몇 일차인가요? (직접 조절 가능)</div>
       <div class="day-row">
         <button class="day-btn" onclick="changeDay(-1)">-</button>
         <div class="day-input-wrap">
@@ -326,19 +405,19 @@
       </div>
       <input type="range" id="dayRange" min="1" max="200" value="11" oninput="syncRange(this.value)" />
 
-      <div class="input-title" style="margin-top:6px;">아기 생후 개월 수 (만 개월)</div>
-      <div class="month-pills" id="monthPills">
-        <button class="month-pill" onclick="setMonth(5, this)">5개월 전</button>
-        <button class="month-pill active" onclick="setMonth(6, this)">만 6개월</button>
-        <button class="month-pill" onclick="setMonth(7, this)">7~8개월</button>
-        <button class="month-pill" onclick="setMonth(9, this)">9~11개월</button>
-        <button class="month-pill" onclick="setMonth(12, this)">돌 이후</button>
+      <div class="sec-title" style="margin-top:4px;">아기 생후 개월 수 (만 개월)</div>
+      <div class="pills" id="monthPills">
+        <button class="pill" onclick="setMonth(5, this)">5개월 전</button>
+        <button class="pill active" onclick="setMonth(6, this)">만 6개월</button>
+        <button class="pill" onclick="setMonth(7, this)">7~8개월</button>
+        <button class="pill" onclick="setMonth(9, this)">9~11개월</button>
+        <button class="pill" onclick="setMonth(12, this)">돌 이후</button>
       </div>
     </div>
 
     <div class="stage-banner">
       <div class="tag" id="stageTag">초기 전반</div>
-      <h2 id="stageTitle">초기 전반 (적응기 · 1~14일차)</h2>
+      <h2 id="stageTitle">초기 전반 (적응기 · 11일차)</h2>
     </div>
 
     <div class="grid-2">
@@ -348,7 +427,7 @@
         <div class="sub" id="outAmountSub">잘 먹으면 80g까지 OK</div>
       </div>
       <div class="stat-box">
-        <div class="lbl">하루 횟수 & 시간</div>
+        <div class="lbl">하루 횟수 &amp; 시간</div>
         <div class="val" id="outFreq">1일 1회</div>
         <div class="sub" id="outFreqSub">오전 9~10시 권장</div>
       </div>
@@ -365,9 +444,9 @@
     </div>
 
     <div class="card">
-      <div class="input-title" style="margin-bottom:6px;">배죽 묽기 · 입자 · 조리법</div>
-      <div style="font-size:14px; font-weight:700; color:#0f172a; margin-bottom:4px;" id="outTexture">10~7배죽 (수프처럼 흐르는 묽기)</div>
-      <div style="font-size:13px; color:#475569;" id="outOil">카놀라유 매 끼니 2~3방울 · 잡곡 50% (현미·흑미 제외)</div>
+      <div class="sec-title" style="margin-bottom:6px;">배죽 묽기 · 입자 · 오일</div>
+      <div style="font-size:13.5px; font-weight:700; color:#0f172a; margin-bottom:4px;" id="outTexture"></div>
+      <div style="font-size:12.5px; color:#475569;" id="outOil"></div>
     </div>
 
     <div class="warn-box">
@@ -376,11 +455,105 @@
     </div>
 
     <div class="tip-box">
-      <strong>알레르기 예방 핵심:</strong> 밀가루·계란(노른자+흰자 완숙)·땅콩(땅콩버터 녹여)·생선은 <strong>7개월 전</strong>에 일찍 경험시키는 게 좋아요! (오전 이유식 시간에 먹여 낮 동안 반응 살피기)
+      <strong>알레르기 예방 &amp; 새 재료 3일 룰:</strong> 새 재료는 한 번에 1가지씩, 오전 시간에 2~3일간 먹이며 발진·구토·설사를 살피세요. 밀가루·계란(완숙)·땅콩(묽게 녹여)·생선은 <strong>만 7개월 전</strong>에 경험시키는 게 좋아요!
     </div>
   </div>
 
-  <!-- TAB 2: 시기별 총정리 -->
+  <!-- TAB 2: 배죽·물양 계산기 -->
+  <div id="tab-ratio" class="hidden">
+    <div class="card">
+      <div class="sec-title">1. 쌀 양 → 필요한 물 양 계산기</div>
+      <div class="form-row">
+        <div class="field">
+          <label>쌀 종류</label>
+          <select id="riceType" onchange="calcRatio()">
+            <option value="raw">생쌀 / 불린쌀</option>
+            <option value="powder">쌀가루 (되직함 주의)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>쌀 무게 (g)</label>
+          <input type="number" id="riceGrams" value="30" min="5" max="1000" oninput="calcRatio()" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>몇 배죽</label>
+          <select id="ratioMul" onchange="calcRatio()">
+            <option value="10">10배죽 (초기 미음)</option>
+            <option value="8">8배죽 (초기 후반)</option>
+            <option value="7">7배죽 (중기)</option>
+            <option value="5">5배죽 (후기 무른죽)</option>
+            <option value="3">3배죽 (후기~완료 진밥)</option>
+            <option value="2">2배죽 (완료기 진밥)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>조리 도구 (증발률)</label>
+          <select id="evapRate" onchange="calcRatio()">
+            <option value="0.20">냄비 (증발 약 20%)</option>
+            <option value="0.05">마스터기/밥솥 (약 5%)</option>
+          </select>
+        </div>
+      </div>
+      <div class="result-highlight" id="ratioOut1"></div>
+    </div>
+
+    <div class="card">
+      <div class="sec-title">2. 목표 끼니·큐브 → 쌀 &amp; 물 거꾸로 계산</div>
+      <div class="form-row">
+        <div class="field">
+          <label>한 끼(1개) 무게 (g)</label>
+          <input type="number" id="targetSize" value="60" min="10" max="300" oninput="calcReverse()" />
+        </div>
+        <div class="field">
+          <label>만들 개수 (끼니/칸)</label>
+          <input type="number" id="targetCount" value="9" min="1" max="50" oninput="calcReverse()" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label>몇 배죽</label>
+          <select id="revMul" onchange="calcReverse()">
+            <option value="10">10배죽</option>
+            <option value="8">8배죽</option>
+            <option value="7" selected>7배죽</option>
+            <option value="5">5배죽</option>
+            <option value="3">3배죽</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>조리 도구</label>
+          <select id="revEvap" onchange="calcReverse()">
+            <option value="0.20">냄비 (증발 20%)</option>
+            <option value="0.05">마스터기/밥솥 (5%)</option>
+          </select>
+        </div>
+      </div>
+      <div class="result-highlight" id="ratioOut2"></div>
+    </div>
+  </div>
+
+  <!-- TAB 3: 식재료 백과 -->
+  <div id="tab-food" class="hidden">
+    <div class="card">
+      <input type="text" class="search-input" id="foodSearch" placeholder="재료 검색 (예: 콜리플라워, 소고기, 시금치, 꿀, 두부)" oninput="renderFoods()" />
+      <div class="pills" id="catPills" style="margin-bottom:8px;">
+        <button class="pill active" onclick="setCat('전체', this)">전체</button>
+        <button class="pill" onclick="setCat('채소', this)">채소</button>
+        <button class="pill" onclick="setCat('고기·생선', this)">고기·생선</button>
+        <button class="pill" onclick="setCat('과일', this)">과일</button>
+        <button class="pill" onclick="setCat('곡류·콩', this)">곡류·콩</button>
+        <button class="pill" onclick="setCat('유제품·계란', this)">유제품·계란</button>
+        <button class="pill" onclick="setCat('해조·기름', this)">해조·기름</button>
+        <button class="pill" onclick="setCat('주의·금지', this)">⚠️ 주의·금지</button>
+      </div>
+      <div class="food-count" id="foodCount"></div>
+      <div id="foodList"></div>
+    </div>
+  </div>
+
+  <!-- TAB 4: 시기별 총정리 -->
   <div id="tab-stage" class="hidden">
     <div class="card">
       <div class="stage-card">
@@ -405,7 +578,7 @@
         <h4>4. 후기 (91~180일차 · 만 9~11개월)</h4>
         <p><strong>양/횟수:</strong> 1일 3회 + 간식 · 한 끼 120~150g</p>
         <p><strong>묽기:</strong> 3~2배죽 · 5~7mm 썰기 (바나나 무르기)</p>
-        <p><strong>포인트:</strong> 고기 매일 20~30g, 숟가락 쥐여주기 & 밥·반찬 분리</p>
+        <p><strong>포인트:</strong> 고기 매일 20~30g, 숟가락 쥐여주기 &amp; 밥·반찬 분리</p>
       </div>
       <div class="stage-card" style="margin-bottom:0;">
         <h4>5. 완료기 (181일차~ · 만 12~18개월)</h4>
@@ -414,13 +587,8 @@
         <p><strong>포인트:</strong> 생우유·꿀 전환 가능, 두 돌까지 무염 식단 유지</p>
       </div>
     </div>
-  </div>
-
-  <!-- TAB 3: 식재료 검색 -->
-  <div id="tab-food" class="hidden">
-    <div class="card">
-      <input type="text" class="search-input" id="foodSearch" placeholder="궁금한 재료 검색 (예: 시금치, 계란, 꿀, 소고기)" oninput="renderFoods()" />
-      <div id="foodList"></div>
+    <div class="tip-box">
+      <strong>변 색깔·묽기 변화 안내:</strong> 완두콩·녹색 채소를 먹으면 진한 녹색 변이 나올 수 있고, 옥수수·토마토 껍질이 그대로 나오는 건 정상이에요. 단, 점액이 많거나 물설사가 계속되면 양을 줄이고 소아과와 상의하세요.
     </div>
   </div>
 
@@ -429,29 +597,111 @@
 
 <script>
 let selectedMonth = 6;
+let selectedCat = '전체';
 
 const foods = [
-  { name: "소고기 · 돼지고기", when: "초기 (만 6개월)", warn: false, desc: "매일 10~20g 이상 필수! 소 간으로 대체 금지. 믹서보다 다지기·얇게 썰기" },
-  { name: "시금치 · 당근 · 배추", when: "만 6개월 이후!", warn: true, desc: "질산염 함량 높아 만 6개월 전 빈혈 위험! 반드시 6개월 이후 푹 익혀 먹이기" },
-  { name: "달걀 (노른자+흰자)", when: "초기 (만 6개월)", warn: false, desc: "개정 지침: 노른자·흰자 분리 없이 처음부터 함께 완숙으로 삶아 으깨기" },
-  { name: "꿀 (가열 포함)", when: "돌 이후 (12개월~)", warn: true, desc: "100℃ 끓여도 보툴리누스균 아포 안 죽음! 꿀 들어간 과자·빵도 돌 전 절대 금지" },
-  { name: "생우유 그대로 마시기", when: "돌 이후 (12개월~)", warn: true, desc: "돌 전 절대 금지! (단, 이유식 조리 시 끓여서 소스처럼 소량 쓰는 건 OK)" },
-  { name: "쌀 · 오트밀 · 밀가루", when: "초기 (만 6개월)", warn: false, desc: "오트밀은 초기 쌀죽과 함께 10~20%부터. 밀가루는 7개월 전 일찍 경험 권장" },
-  { name: "잡곡 (현미·흑미 제외)", when: "초기 (만 6개월)", warn: false, desc: "돌 전까지 잡곡 50% 권장. 현미와 흑미는 초기 제외! 체중 안 늘면 줄이기" },
-  { name: "흰살·등푸른 생선", when: "초기~중기", warn: false, desc: "가시 완벽 제거 후 익혀서 제공. 알레르기 예방 위해 7개월 전 경험, 주 2회 이하" },
-  { name: "땅콩버터 · 두부", when: "초기 후반~중기", warn: false, desc: "땅콩버터는 뜨거운 물에 묽게 녹여 7개월 전 경험 (알갱이 질식 주의)" },
-  { name: "플레인 요거트 · 치즈", when: "초기 후반~중기", warn: false, desc: "무가당 플레인 요거트·저염 아기 치즈 선택 (나트륨 성분표 확인)" },
-  { name: "카놀라유 / 소금·된장", when: "초기 / 두 돌 이후", warn: true, desc: "카놀라유는 초기부터 매 끼니 권장. 소금·된장·김치 간은 두 돌까지 금지!" },
-  { name: "과일 주스", when: "돌 이후 (12개월~)", warn: true, desc: "과일은 생과나 퓨레로 먹고, 과일 주스는 돌 전 금지!" }
+  // 채소
+  { name: "애호박", cat: "채소", when: "초기", cls: "b-early", desc: "첫 채소로 최고! 껍질과 가운데 씨 부분을 도려내고 쪄서 곱게 으깨 먹여요." },
+  { name: "양배추", cat: "채소", when: "초기", cls: "b-early", desc: "단맛이 있어 아기가 잘 먹어요. 단단한 심지는 빼고 연한 잎만 푹 삶아 사용해요." },
+  { name: "청경채", cat: "채소", when: "초기", cls: "b-early", desc: "이파리 채소 대표! 줄기 아래 심지는 질기므로 잎 위주로 데쳐서 다져요." },
+  { name: "비타민 (타트소이)", cat: "채소", when: "초기", cls: "b-early", desc: "비타민이 풍부한 이파리 채소. 줄기보다 부드러운 잎 부분을 데쳐 사용해요." },
+  { name: "브로콜리", cat: "채소", when: "초기", cls: "b-early", desc: "철분 흡수를 돕는 비타민C 풍부! 굵은 대는 빼고 꽃봉오리만 푹 쪄서 다져요." },
+  { name: "콜리플라워", cat: "채소", when: "초기", cls: "b-early", desc: "소화가 잘되는 하얀 채소. 꽃송이 위주로 부드럽게 익혀 소고기 미음과 잘 어울려요." },
+  { name: "감자", cat: "채소", when: "초기", cls: "b-early", desc: "채소보다는 탄수화물(밥) 개념! 싹 난 부분은 독소가 있으니 반드시 도려내세요." },
+  { name: "고구마", cat: "채소", when: "초기", cls: "b-early", desc: "단맛이 강해 아기가 좋아하지만, 변비가 올 수 있고 주 식재료(밥) 개념으로 양을 조절해요." },
+  { name: "단호박", cat: "채소", when: "초기", cls: "b-early", desc: "씨와 껍질을 제거하고 쪄서 퓌레로 만들어요. 카로틴 풍부해 과다 섭취 시 피부가 노래질 수 있어요." },
+  { name: "오이", cat: "채소", when: "초기", cls: "b-early", desc: "껍질과 씨를 빼고 속살만 익혀 쓰면 수분이 풍부하고 부드러워요." },
+  { name: "시금치", cat: "채소", when: "만 6개월 이후!", cls: "b-ban", desc: "질산염이 많아 만 6개월 전 빈혈 위험! 반드시 6개월 이후 데쳐 물 버리고 사용(오래 보관 X)." },
+  { name: "당근", cat: "채소", when: "만 6개월 이후!", cls: "b-ban", desc: "질산염 때문에 만 6개월 이후 도입 권장! 기름(카놀라유)과 함께 익히면 비타민A 흡수 UP." },
+  { name: "배추", cat: "채소", when: "만 6개월 이후!", cls: "b-ban", desc: "질산염 함량이 있어 만 6개월 이후부터! 사 온 날 바로 쓰고 오래 냉장 보관한 건 피하세요." },
+  { name: "무", cat: "채소", when: "만 6개월 이후", cls: "b-mid", desc: "시원한 맛으로 육수나 죽에 좋아요. 질산염 주의 때문에 만 6개월 이후 푹 무르게 익혀요." },
+  { name: "비트", cat: "채소", when: "만 6개월 이후", cls: "b-mid", desc: "질산염이 높아 만 6개월 이후! 먹이면 소변·대변이 붉게 나올 수 있으니 놀라지 마세요." },
+  { name: "양파", cat: "채소", when: "중기 (7~8m)", cls: "b-mid", desc: "생것은 매워 초기엔 거부할 수 있어요. 중기부터 푹 익히면 단맛이 돌아 감칠맛이 좋아요." },
+  { name: "아욱 · 근대", cat: "채소", when: "중기 (7~8m)", cls: "b-mid", desc: "부드러운 잎채소. 억센 줄기와 껍질 섬유질을 제거하고 잎 위주로 삶아 다져요." },
+  { name: "버섯 (표고·새송이·양송이·느타리)", cat: "채소", when: "중기 (7~8m)", cls: "b-mid", desc: "식이섬유가 질길 수 있어 갓 위주로 아주 잘게 다져 푹 익혀 주세요. (팽이는 질겨서 후기 권장)" },
+  { name: "가지", cat: "채소", when: "중기~후기", cls: "b-mid", desc: "껍질을 벗기고 속살만 쪄서 다지면 보드라워 아기가 잘 먹어요." },
+  { name: "연근 · 우엉", cat: "채소", when: "중기~후기", cls: "b-mid", desc: "섬유질이 단단해 충분히 삶은 뒤 잘게 다져서 소량씩 먹여요." },
+  { name: "콩나물 · 숙주", cat: "채소", when: "후기 (9~11m)", cls: "b-late", desc: "머리와 꼬리를 떼고 줄기만 푹 삶아 5mm 이상 썰어 식감을 줘요." },
+  { name: "파프리카 · 피망", cat: "채소", when: "중기~후기", cls: "b-mid", desc: "껍질이 질겨 구워서 껍질을 벗기거나 푹 익혀 아주 곱게 다져 주세요." },
+  { name: "옥수수", cat: "채소", when: "중기~후기", cls: "b-mid", desc: "껍질이 소화가 안 돼 변으로 그대로 나올 수 있어요. 크림 형태나 껍질 제거 후 급여." },
+  { name: "깻잎 · 마늘 · 부추 · 대파", cat: "채소", when: "완료기 (12m~)", cls: "b-done", desc: "향과 매운맛이 강해 돌 이후 완료기 유아식부터 양념·향신 채소로 소량씩 사용해요." },
+
+  // 고기·생선
+  { name: "소고기 (안심·우둔·설도·홍두깨)", cat: "고기·생선", when: "초기", cls: "b-early", desc: "철분 보충을 위해 만 6개월부터 매일 10~20g 필수! 기름기 없는 살코기 사용, 국물만 X." },
+  { name: "돼지고기 (안심·등심 살코기)", cat: "고기·생선", when: "초기~중기", cls: "b-early", desc: "삐뽀삐뽀 119 기준 기름기 적은 안심 살코기는 초기부터 매일(소고기와 번갈아) 먹여도 좋아요!" },
+  { name: "닭고기 (안심·가슴살)", cat: "고기·생선", when: "초기", cls: "b-early", desc: "부드럽고 소화가 잘돼요. 단, 소고기보다 철분이 적으므로 간혹 번갈아 가며 주세요." },
+  { name: "흰살 생선 (대구·도미·가자미)", cat: "고기·생선", when: "초기 후반~중기", cls: "b-mid", desc: "지방이 적고 담백해 첫 생선으로 좋아요. 가시를 꼼꼼히 발라 익혀 으깨고 주 2회 이하!" },
+  { name: "연어", cat: "고기·생선", when: "중기~후기", cls: "b-mid", desc: "수은 함량이 낮고 오메가3가 풍부해요! 가시 제거 후 완전히 익혀서 주 2회 이하로 주세요." },
+  { name: "등푸른 생선 (고등어·삼치)", cat: "고기·생선", when: "후기 (9~11m)", cls: "b-late", desc: "알레르기(히스타민)와 기름기 때문에 후기 이후 추천! 가시 완벽 제거 후 주 2회 이하." },
+  { name: "참치 · 황새치 (큰 생선)", cat: "고기·생선", when: "가급적 피하기", cls: "b-ban", desc: "수은 축적 우려가 높아 영유아에게는 작은 흰살·연어 위주를 권장해요." },
+  { name: "새우 · 게살 (갑각류)", cat: "고기·생선", when: "중기~완료기", cls: "b-late", desc: "최신 알레르기 지침상 돌 전 소량 시도 가능하나, 반응이 흔하므로 잘 익혀 다져 소량 테스트!" },
+  { name: "전복 · 조개 · 오징어", cat: "고기·생선", when: "완료기 (12m~)", cls: "b-done", desc: "질겨서 질식 위험이 있고 알레르기 우려가 있어 돌 이후 아주 잘게 다져 먹여요." },
+  { name: "굴비 · 간 된 생선", cat: "고기·생선", when: "두 돌 이후", cls: "b-ban", desc: "소금 간이 되어 있어 두 돌 전 아기 신장에 부담을 주므로 피하세요." },
+
+  // 과일
+  { name: "사과", cat: "과일", when: "초기", cls: "b-early", desc: "껍질·씨 제거 후 갈거나 익혀 퓌레로! 익힌 사과는 변비를 유발할 수 있으니 변비 아기는 주의." },
+  { name: "배", cat: "과일", when: "초기", cls: "b-early", desc: "수분이 많고 소화가 잘돼 변비 예방에도 좋아요. 껍질과 심을 빼고 부드럽게 갈아 주세요." },
+  { name: "바나나", cat: "과일", when: "초기", cls: "b-early", desc: "익히지 않고 포크로 으깨 주어도 괜찮아요! 핑거푸드로도 좋지만 너무 많이 먹으면 변비 주의." },
+  { name: "자두 · 살구", cat: "과일", when: "초기", cls: "b-early", desc: "씨와 껍질을 제거하고 신맛이 강하면 살짝 익혀서 퓌레로 주세요." },
+  { name: "아보카도", cat: "과일", when: "초기", cls: "b-early", desc: "불포화지방산이 풍부한 부드러운 과일! 익히지 않고 으깨서 이유식에 섞어 줘도 좋아요." },
+  { name: "수박", cat: "과일", when: "초기", cls: "b-early", desc: "씨를 완벽하게 발라내고 과육만 으깨서 줘요. 수분이 많고 당도가 높으니 소량만!" },
+  { name: "토마토", cat: "과일", when: "초기 후반~중기", cls: "b-mid", desc: "열십자로 칼집 내어 데친 뒤 껍질·씨를 제거하고 먹여요. 산성이라 입 주변 발진 관찰!" },
+  { name: "딸기", cat: "과일", when: "초기 후반~중기", cls: "b-mid", desc: "알레르기 반응이 있을 수 있어 낮 시간에 소량 테스트! 겉 씨가 부담되면 체에 살짝 거르세요." },
+  { name: "블루베리", cat: "과일", when: "중기~후기", cls: "b-mid", desc: "통째로 주면 질식 위험! 반드시 으깨거나 1/4 등분 이상 작게 잘라서 주세요." },
+  { name: "참외 · 멜론", cat: "과일", when: "후기 (9~11m)", cls: "b-late", desc: "씨 부분을 빼고 부드러운 과육만 작게 잘라 주세요. 찬 성질이라 설사 시 피하기." },
+  { name: "귤 · 오렌지", cat: "과일", when: "후기 (9~11m)", cls: "b-late", desc: "신맛과 알레르기 우려가 있어 다른 과일을 먼저 먹은 뒤 속껍질을 벗겨 소량씩 시작해요." },
+  { name: "포도 · 방울토마토 (통째)", cat: "과일", when: "질식 주의!", cls: "b-ban", desc: "둥글고 매끄러워 통째로 주면 치명적 질식 위험! 반드시 껍질 벗기고 4등분 이상 자르기." },
+  { name: "키위 · 복숭아 · 망고 · 파인애플", cat: "과일", when: "완료기 (12m~)", cls: "b-done", desc: "알레르기와 입 주변 자극이 흔한 과일들. 돌 이후 잘 익은 것으로 소량 테스트!" },
+  { name: "과일 주스 (시판/착즙)", cat: "과일", when: "돌 전 금지!", cls: "b-ban", desc: "섬유질 없이 당분만 높아 돌 전 금지! 과일은 즙이 아니라 으깬 퓌레나 과육으로 먹이세요." },
+
+  // 곡류·콩
+  { name: "쌀 · 찹쌀", cat: "곡류·콩", when: "초기", cls: "b-early", desc: "이유식의 기본! 처음엔 10배죽으로 시작해 점차 7배죽→5배죽→진밥으로 물을 줄여요." },
+  { name: "오트밀 (귀리)", cat: "곡류·콩", when: "초기", cls: "b-early", desc: "철분·식이섬유 풍부! 초기부터 쌀죽에 10~20% 섞어 쓰기 좋아요." },
+  { name: "밀가루", cat: "곡류·콩", when: "초기 (7m 전!)", cls: "b-early", desc: "삐뽀삐뽀 119 핵심: 알레르기·당뇨 예방을 위해 만 7개월 전 이유식에 한 꼬집 소량 경험 권장!" },
+  { name: "잡곡 (보리·차조·수수·퀴노아)", cat: "곡류·콩", when: "초기~중기", cls: "b-mid", desc: "돌 전까지 잡곡 50% 섞기 권장 (단, 체중이 잘 안 늘거나 묽은 변을 보면 줄이세요)." },
+  { name: "현미 · 흑미", cat: "곡류·콩", when: "중기 이후", cls: "b-mid", desc: "거친 껍질 때문에 소화 부담이 있어 초기에는 제외! 중기 후반~후기부터 불려서 섞어요." },
+  { name: "두부", cat: "곡류·콩", when: "초기 후반~중기", cls: "b-mid", desc: "좋은 식물성 단백질! 끓는 물에 한 번 데쳐서 간수·잡내를 뺀 뒤 으깨서 주세요." },
+  { name: "완두콩 · 강낭콩", cat: "곡류·콩", when: "초기", cls: "b-early", desc: "단백질·식이섬유 풍부! 껍질을 꼭 벗기고 푹 삶아 으깨서 먹이세요." },
+  { name: "검은콩 · 대두 · 팥", cat: "곡류·콩", when: "중기~완료기", cls: "b-late", desc: "단단한 콩류는 충분히 불리고 삶아 껍질 제거 후 다져서 중후기부터 사용해요." },
+
+  // 유제품·계란
+  { name: "달걀 (노른자 + 흰자)", cat: "유제품·계란", when: "초기 후반 (6m~)", cls: "b-early", desc: "최신 개정 지침: 노른자·흰자 분리 없이 처음부터 완숙으로 삶아 함께 으깨 소량 시작!" },
+  { name: "플레인 요거트 (무가당)", cat: "유제품·계란", when: "초기 후반~중기", cls: "b-mid", desc: "설탕·첨가물 없는 순수 무가당 플레인 요거트만 가능! (시판 떠먹는 달달한 제품 X)" },
+  { name: "아기 치즈 / 코티지치즈", cat: "유제품·계란", when: "만 8개월~후기", cls: "b-late", desc: "나트륨 함량이 높은 제품이 많으므로 성분표 확인 후 무염·저염 아기 치즈로 소량만!" },
+  { name: "생우유 (그대로 마시기)", cat: "유제품·계란", when: "돌 이후 (12m~)", cls: "b-ban", desc: "돌 전 주된 음료로 절대 금지(장출혈·빈혈 위험)! 단, 조리 시 끓여 소스처럼 소량 쓰는 건 OK." },
+
+  // 해조·기름·견과
+  { name: "카놀라유 · 올리브유 · 참기름", cat: "해조·기름", when: "초기 / 중기", cls: "b-early", desc: "카놀라유(오메가3 풍부)는 초기부터 매 끼니 2~3방울 권장! 참기름·들기름은 중후기부터 소량." },
+  { name: "땅콩 (100% 땅콩버터)", cat: "해조·기름", when: "초기 후반 (7m 전)", cls: "b-mid", desc: "무가당·무염 100% 땅콩버터를 뜨거운 물에 묽게 녹여 소량 경험! 덩어리·통땅콩 질식 금지!" },
+  { name: "미역 · 다시마 · 김", cat: "해조·기름", when: "후기 (9~11m)", cls: "b-late", desc: "요오드 함량이 높아 너무 많이·자주 주면 갑상선 부담! 소량 육수나 무염 김가루 정도만." },
+  { name: "멸치 (육수·가루)", cat: "해조·기름", when: "후기~완료기", cls: "b-late", desc: "염분이 높아 짠맛에 유의! 내장·머리 제거하고 물에 살짝 헹군 뒤 소량 육수로만 쓰세요." },
+
+  // 절대 주의·금지
+  { name: "꿀 (가열한 꿀 포함)", cat: "주의·금지", when: "돌 전 절대 금지!", cls: "b-ban", desc: "100℃로 끓여도 보툴리누스균 아포가 안 죽어요! 꿀 들어간 카스텔라·떡·과자도 돌 전 절대 X." },
+  { name: "소금 · 간장 · 된장 · 김치", cat: "주의·금지", when: "두 돌까지 무염!", cls: "b-ban", desc: "돌 전 간 절대 금지, 두 돌 전까지도 소금·김치·된장 피하기! 아기 신장에 부담을 줍니다." },
+  { name: "통견과류 · 떡 · 사탕", cat: "주의·금지", when: "4세 전 질식 위험!", cls: "b-ban", desc: "기도를 막기 쉬운 딱딱하거나 끈적한 음식은 절대 금지! 견과류는 곱게 갈거나 묽게 녹여서." }
 ];
 
 function switchTab(id, btn) {
-  document.getElementById('tab-calc').classList.add('hidden');
-  document.getElementById('tab-stage').classList.add('hidden');
-  document.getElementById('tab-food').classList.add('hidden');
+  ['calc', 'ratio', 'food', 'stage'].forEach(t => {
+    document.getElementById('tab-' + t).classList.add('hidden');
+  });
   document.getElementById('tab-' + id).classList.remove('hidden');
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+}
+
+function calcFromStartDate() {
+  const val = document.getElementById('startDate').value;
+  if (!val) return;
+  const start = new Date(val + 'T00:00:00');
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+  const diff = Math.floor((today - start) / (1000 * 60 * 60 * 24)) + 1;
+  const d = Math.max(1, Math.min(365, diff));
+  document.getElementById('dayInput').value = d;
+  document.getElementById('dayRange').value = Math.min(200, d);
+  render();
 }
 
 function changeDay(delta) {
@@ -471,7 +721,7 @@ function syncRange(val) {
 
 function setMonth(m, btn) {
   selectedMonth = m;
-  document.querySelectorAll('.month-pill').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('#monthPills .pill').forEach(p => p.classList.remove('active'));
   btn.classList.add('active');
   render();
 }
@@ -582,26 +832,75 @@ function render() {
   document.getElementById('outMeat').textContent = meat;
   document.getElementById('outTexture').textContent = tex;
   document.getElementById('outOil').textContent = oil;
+  document.getElementById('outCautions').innerHTML = cautions.map(c => `<li>${c}</li>`).join('');
+}
 
-  const ul = document.getElementById('outCautions');
-  ul.innerHTML = cautions.map(c => `<li>${c}</li>`).join('');
+function calcRatio() {
+  const type = document.getElementById('riceType').value;
+  const g = Math.max(1, parseFloat(document.getElementById('riceGrams').value || '30'));
+  const mul = parseInt(document.getElementById('ratioMul').value, 10);
+  const evap = parseFloat(document.getElementById('evapRate').value);
+  const water = Math.round(g * mul);
+  const totalOut = Math.round(g + water * (1 - evap));
+  const note = type === 'powder' ? '※ 쌀가루는 물을 더 많이 먹으므로 끓인 뒤 너무 되면 끓여 식힌 물을 조금 더하세요.' : '※ 불린 쌀/생쌀 무게 그대로 같은 기준으로 재면 정확해요.';
+  document.getElementById('ratioOut1').innerHTML = `
+    <div class="big">필요한 물: ${water} ml</div>
+    <div class="detail">
+      예상 완성량 약 <strong>${totalOut} g</strong> (60g 기준 약 <strong>${(totalOut/60).toFixed(1)}끼</strong>)<br/>
+      ${note}
+    </div>
+  `;
+}
+
+function calcReverse() {
+  const size = Math.max(10, parseFloat(document.getElementById('targetSize').value || '60'));
+  const cnt = Math.max(1, parseInt(document.getElementById('targetCount').value || '9', 10));
+  const mul = parseInt(document.getElementById('revMul').value, 10);
+  const evap = parseFloat(document.getElementById('revEvap').value);
+  const targetTotal = size * cnt;
+  const rawTotal = targetTotal / (1 - evap);
+  const rice = Math.round(rawTotal / (mul + 1));
+  const water = Math.round(rice * mul);
+  const ricePlus = Math.round(rice * 1.05);
+  const waterPlus = Math.round(water * 1.05);
+  document.getElementById('ratioOut2').innerHTML = `
+    <div class="big">쌀 ${rice} g + 물 ${water} ml</div>
+    <div class="detail">
+      목표 완성량: ${targetTotal} g (${size}g × ${cnt}개)<br/>
+      냄비·주걱에 묻는 로스 감안(+5%): <strong>쌀 ${ricePlus}g + 물 ${waterPlus}ml</strong>
+    </div>
+  `;
+}
+
+function setCat(cat, btn) {
+  selectedCat = cat;
+  document.querySelectorAll('#catPills .pill').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  renderFoods();
 }
 
 function renderFoods() {
   const q = (document.getElementById('foodSearch').value || '').trim().toLowerCase();
-  const filtered = foods.filter(f => f.name.toLowerCase().includes(q) || f.desc.toLowerCase().includes(q));
+  const filtered = foods.filter(f => {
+    const catOk = selectedCat === '전체' || f.cat === selectedCat;
+    const qOk = !q || f.name.toLowerCase().includes(q) || f.desc.toLowerCase().includes(q) || f.when.toLowerCase().includes(q);
+    return catOk && qOk;
+  });
+  document.getElementById('foodCount').textContent = `총 ${filtered.length}가지 식재료 (전체 ${foods.length}종)`;
   document.getElementById('foodList').innerHTML = filtered.map(f => `
     <div class="food-item">
       <div class="food-top">
         <span class="food-name">${f.name}</span>
-        <span class="food-when ${f.warn ? 'warn' : ''}">${f.when}</span>
+        <span class="badge-when ${f.cls}">${f.when}</span>
       </div>
       <div class="food-desc">${f.desc}</div>
     </div>
-  `).join('') || '<p style="font-size:13px; color:#64748b;">검색 결과가 없어요.</p>';
+  `).join('') || '<p style="font-size:13px; color:#64748b;">검색 결과가 없어요. 다른 이름으로 검색해 보세요!</p>';
 }
 
 render();
+calcRatio();
+calcReverse();
 renderFoods();
 </script>
 </body>
