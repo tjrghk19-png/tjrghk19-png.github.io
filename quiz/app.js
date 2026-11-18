@@ -172,7 +172,7 @@
         '<div class="bar"><i style="width:' + Math.max(8, pct(S.data[k].length, total)) + '%;background:' + c.color + '"></i></div>' +
         '</button>';
     });
-    html += '<button class="catcard" data-act="cat" data-cat="all" style="grid-column:1 / -1">' +
+    html += '<button class="catcard" data-act="cat" data-cat="all">' +
       '<div class="emoji">🎲</div><div class="name">전체 랜덤</div>' +
       '<div class="cnt">' + total.toLocaleString() + '문제를 섞어서 무한으로</div></button>';
     html += '</div>';
