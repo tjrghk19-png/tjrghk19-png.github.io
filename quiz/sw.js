@@ -1,4 +1,4 @@
-const CACHE = 'jq-v2';
+const CACHE = 'jq-v3';
 const ASSETS = ['./', './index.html', './style.css', './app.js', './manifest.webmanifest',
   './icon.svg', './icon-180.png', './icon-192.png', './icon-512.png',
   './data/lang.json', './data/sisa.json', './data/ncs.json'];

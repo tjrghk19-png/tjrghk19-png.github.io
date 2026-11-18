@@ -1,8 +1,13 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" class="locked">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<script>
+  /* 이미 비밀번호를 푼 기기면 잠금 화면 없이 바로 연다 */
+  try { if (localStorage.getItem('babyfood_unlocked_v1') === '1') document.documentElement.className = ''; } catch (e) {}
+</script>
 <title>삐뽀삐뽀 119 · 이유식 자동 계산기 & 식재료 백과 (석이네)</title>
 <style>
   :root {
@@ -368,9 +373,192 @@
     color: var(--muted);
     margin-top: 14px;
   }
+
+  /* ── 잠금 화면 ── */
+  html.locked, html.locked body { overflow: hidden; }
+  html.locked body > *:not(#bfLock) { display: none !important; }
+  #bfLock {
+    position: fixed; inset: 0; z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+    padding: calc(24px + env(safe-area-inset-top)) 22px calc(24px + env(safe-area-inset-bottom));
+    background: linear-gradient(150deg, #1e3a5f 0%, #2b5282 55%, #2563eb 100%);
+  }
+  #bfLock .lock-card {
+    width: 100%; max-width: 360px; background: #fff; border-radius: 22px;
+    padding: 26px 22px 22px; text-align: center;
+    box-shadow: 0 18px 48px rgba(15, 23, 42, .28);
+  }
+  #bfLock .lock-ico { font-size: 34px; line-height: 1; margin-bottom: 10px; }
+  #bfLock h1 { margin: 0 0 6px; font-size: 19px; font-weight: 800; letter-spacing: -.02em; color: #0f172a; }
+  #bfLock p { margin: 0; font-size: 13px; color: #64748b; line-height: 1.55; }
+  #bfLock form { margin-top: 20px; text-align: left; }
+  #bfLock label { display: block; font-size: 12px; font-weight: 800; color: #475569; margin: 0 0 6px 2px; }
+  #bfLock input[type=password] {
+    width: 100%; height: 52px; border: 1.5px solid #e2e8f0; border-radius: 14px; background: #f8fafc;
+    padding: 0 14px; font-family: inherit; font-size: 20px; letter-spacing: .28em; text-align: center;
+    color: #0f172a; outline: none; -webkit-appearance: none; appearance: none;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  #bfLock input[type=password]:focus { border-color: #2563eb; background: #fff; }
+  #bfLock .lock-btn {
+    width: 100%; height: 52px; margin-top: 12px; border-radius: 14px;
+    background: #1e3a5f; color: #fff; font-family: inherit; font-size: 16px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    border: 0; cursor: pointer; transition: transform .06s ease, opacity .15s ease;
+  }
+  #bfLock .lock-btn:active { transform: scale(.99); opacity: .92; }
+  #bfLock .lock-btn[disabled] { opacity: .55; cursor: default; }
+  #bfLock .lock-msg {
+    min-height: 19px; margin: 10px 2px 0; text-align: center;
+    font-size: 13px; font-weight: 700; color: #dc2626;
+  }
+  #bfLock .lock-foot { margin-top: 14px; font-size: 11.5px; color: #94a3b8; line-height: 1.5; }
+  #bfLock .shake { animation: bfshake .34s ease; }
+  @keyframes bfshake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-7px); }
+    40% { transform: translateX(7px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+  }
 </style>
 </head>
 <body>
+
+<div id="bfLock" role="dialog" aria-modal="true" aria-labelledby="bfLockTitle">
+  <div class="lock-card">
+    <div class="lock-ico" aria-hidden="true">🔒</div>
+    <h1 id="bfLockTitle">석이네 이유식 계산기</h1>
+    <p>비밀번호를 입력하면 계산기가 열려요.<br>한 번 입력한 기기에서는 계속 열립니다.</p>
+    <form id="bfLockForm" autocomplete="off">
+      <label for="bfLockInput">비밀번호</label>
+      <input id="bfLockInput" type="password" inputmode="numeric" autocomplete="current-password"
+             maxlength="24" enterkeyhint="done" placeholder="••••" autofocus>
+      <div class="lock-msg" id="bfLockMsg" role="alert" aria-live="polite"></div>
+      <button class="lock-btn" id="bfLockBtn" type="submit">열기</button>
+    </form>
+    <div class="lock-foot">공유받은 분만 사용할 수 있어요.</div>
+  </div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var LOCK_KEY = 'babyfood_unlocked_v1';
+  var EXPECT = '2ec42bc1f3e672fc1cf7fdcfc23246415dcf20f03c0d4a5bbbd92a185708f5b7';
+
+  var screenEl = document.getElementById('bfLock');
+  var cardEl = screenEl.querySelector('.lock-card');
+  var formEl = document.getElementById('bfLockForm');
+  var inputEl = document.getElementById('bfLockInput');
+  var btnEl = document.getElementById('bfLockBtn');
+  var msgEl = document.getElementById('bfLockMsg');
+
+  function sha256Ref(v, a) { return (v >>> a) | (v << (32 - a)); }
+  /* crypto.subtle 이 없는 환경(비보안 컨텍스트)을 위한 순수 JS SHA-256 */
+  function sha256js(str) {
+    var mp = Math.pow, maxWord = mp(2, 32), result = '', words = [], bitLen = str.length * 8;
+    var hash = sha256js.h = sha256js.h || [], k = sha256js.k = sha256js.k || [], counter = k.length;
+    var composite = {};
+    for (var cand = 2; counter < 64; cand++) {
+      if (!composite[cand]) {
+        for (var c = 0; c < 313; c += cand) composite[c] = cand;
+        hash[counter] = (mp(cand, .5) * maxWord) | 0;
+        k[counter++] = (mp(cand, 1 / 3) * maxWord) | 0;
+      }
+    }
+    str += '\x80';
+    while (str.length % 64 - 56) str += '\x00';
+    for (var i = 0; i < str.length; i++) {
+      var ch = str.charCodeAt(i);
+      if (ch >> 8) return '';
+      words[i >> 2] |= ch << ((3 - i) % 4) * 8;
+    }
+    words[words.length] = (bitLen / maxWord) | 0;
+    words[words.length] = bitLen;
+    for (var j = 0; j < words.length;) {
+      var w = words.slice(j, j += 16), oldHash = hash;
+      hash = hash.slice(0, 8);
+      for (i = 0; i < 64; i++) {
+        var w15 = w[i - 15], w2 = w[i - 2], a = hash[0], e = hash[4];
+        var t1 = hash[7] + (sha256Ref(e, 6) ^ sha256Ref(e, 11) ^ sha256Ref(e, 25)) +
+          ((e & hash[5]) ^ ((~e) & hash[6])) + k[i] +
+          (w[i] = i < 16 ? w[i] : (w[i - 16] + (sha256Ref(w15, 7) ^ sha256Ref(w15, 18) ^ (w15 >>> 3)) + w[i - 7] +
+            (sha256Ref(w2, 17) ^ sha256Ref(w2, 19) ^ (w2 >>> 10))) | 0);
+        var t2 = (sha256Ref(a, 2) ^ sha256Ref(a, 13) ^ sha256Ref(a, 22)) +
+          ((a & hash[1]) ^ (a & hash[2]) ^ (hash[1] & hash[2]));
+        hash = [(t1 + t2) | 0].concat(hash);
+        hash[4] = (hash[4] + t1) | 0;
+      }
+      for (i = 0; i < 8; i++) hash[i] = (hash[i] + oldHash[i]) | 0;
+    }
+    for (i = 0; i < 8; i++) {
+      for (j = 3; j + 1; j--) {
+        var b = (hash[i] >> (j * 8)) & 255;
+        result += (b < 16 ? '0' : '') + b.toString(16);
+      }
+    }
+    return result;
+  }
+  function sha256hex(str) {
+    try {
+      var subtle = window.crypto && window.crypto.subtle;
+      if (subtle && window.TextEncoder) {
+        var data = new TextEncoder().encode(str);
+        return subtle.digest('SHA-256', data).then(function (buf) {
+          return Array.prototype.map.call(new Uint8Array(buf), function (b) {
+            return ('0' + b.toString(16)).slice(-2);
+          }).join('');
+        }).catch(function () { return sha256js(str); });
+      }
+    } catch (e) { /* 아래 fallback */ }
+    return Promise.resolve(sha256js(str));
+  }
+
+  function isUnlocked() {
+    try { return localStorage.getItem(LOCK_KEY) === '1'; } catch (e) { return false; }
+  }
+  function remember() {
+    try { localStorage.setItem(LOCK_KEY, '1'); } catch (e) {}
+  }
+  function openApp() {
+    document.documentElement.classList.remove('locked');
+    if (screenEl && screenEl.parentNode) screenEl.parentNode.removeChild(screenEl);
+  }
+  function fail(text) {
+    msgEl.textContent = text;
+    cardEl.classList.remove('shake');
+    void cardEl.offsetWidth;
+    cardEl.classList.add('shake');
+    inputEl.value = '';
+    inputEl.focus();
+  }
+  function toggleBusy(on) {
+    btnEl.disabled = on;
+    inputEl.disabled = on;
+    btnEl.textContent = on ? '확인 중…' : '열기';
+  }
+
+  if (isUnlocked()) { openApp(); return; }
+
+  formEl.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var value = inputEl.value.trim();
+    if (!value) { fail('비밀번호를 입력해 주세요.'); return; }
+    msgEl.textContent = '';
+    toggleBusy(true);
+    sha256hex(value).then(function (hex) {
+      toggleBusy(false);
+      if (hex === EXPECT) {
+        remember();
+        openApp();
+      } else {
+        fail('비밀번호가 맞지 않아요. 다시 입력해 주세요.');
+      }
+    });
+  });
+  setTimeout(function () { try { inputEl.focus(); } catch (e) {} }, 60);
+})();
+</script>
 
 <div class="header">
   <div class="badge">삐뽀삐뽀 119 · 대한소아청소년과학회 기준</div>
