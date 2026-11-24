@@ -828,6 +828,7 @@
         <label for="startDate">이유식 시작일</label>
         <input type="date" id="startDate" onchange="calcFromStartDate()" />
       </div>
+      <div style="font-size:11px; color:#64748b; margin:-6px 0 10px;">시작일을 넣으면 오늘 일차가 자동으로 계산되고, 이 기기(브라우저)에만 저장돼요.</div>
 
       <div class="sec-title">이유식 몇 일차인가요? (직접 조절 가능)</div>
       <div class="day-row">
@@ -2219,11 +2220,12 @@ function renderProg() {
   const c = statusCounts();
   const done = c.pass + c.warn;
   const pct = c.total ? Math.round((done / c.total) * 100) : 0;
+  const pctText = done > 0 && pct === 0 ? '1% 미만' : pct + '%';
   const pctEl = document.getElementById('progPct');
   const barEl = document.getElementById('progBar');
   const lgEl = document.getElementById('progLegend');
   if (!pctEl || !barEl || !lgEl) return;
-  pctEl.textContent = `체크 완료 ${done}종 / 전체 ${c.total}종 (${pct}%)`;
+  pctEl.textContent = `체크 완료 ${done}종 / 전체 ${c.total}종 (${pctText})`;
   const passPct = c.total ? (c.pass / c.total) * 100 : 0;
   const warnPct = c.total ? (c.warn / c.total) * 100 : 0;
   barEl.innerHTML = `<span class="p-pass" style="width:${passPct}%"></span><span class="p-warn" style="width:${warnPct}%"></span>`;
@@ -2366,10 +2368,11 @@ function initStartDate() {
   const el = document.getElementById('startDate');
   if (!el) return;
   const saved = getSavedStart();
-  if (saved) {
-    el.value = saved;
-    calcFromStartDate();
-  }
+  if (!saved || !/^\d{4}-\d{2}-\d{2}$/.test(saved)) return;
+  const probe = new Date(saved + 'T00:00:00');
+  if (isNaN(probe.getTime())) return;
+  el.value = saved;
+  calcFromStartDate();
 }
 
 /* ── 3. 상세 조리법 모달 ───────────────────────────────────── */
@@ -2639,6 +2642,7 @@ function calcFromStartDate() {
   const val = document.getElementById('startDate').value;
   if (!val) return;
   const start = new Date(val + 'T00:00:00');
+  if (isNaN(start.getTime())) return;
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const diff = Math.floor((today - start) / (1000 * 60 * 60 * 24)) + 1;
@@ -2672,7 +2676,9 @@ function setMonth(m, btn) {
 }
 
 function render() {
-  const d = Math.max(1, parseInt(document.getElementById('dayInput').value || '1', 10));
+  const rawDay = parseInt(document.getElementById('dayInput').value || '1', 10);
+  const d = Number.isFinite(rawDay) ? Math.max(1, Math.min(365, rawDay)) : 1;
+  if (!Number.isFinite(rawDay)) document.getElementById('dayInput').value = 1;
   document.getElementById('dayRange').value = Math.min(200, d);
 
   let tag, title, amt, amtSub, freq, freqSub, milk, meat, tex, oil, cautions;

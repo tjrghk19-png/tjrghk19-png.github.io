@@ -432,6 +432,376 @@
     color: var(--muted);
     margin-top: 14px;
   }
+  /* ── 텍스트 선택·복사 (모바일 포함) ── */
+  body, .card, .food-item, .food-desc, .stage-card, .gt, .tip-box, .warn-box,
+  .modal-body, .recipe-sec, .recipe-sec p, .recipe-sec li, .recipe-sec td {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    user-select: text;
+    -webkit-touch-callout: default;
+  }
+  .tab-btn, .pill, .day-btn, .day-chip, .copy-btn, .status-btn, .recipe-open-btn,
+  .modal-close, .link-btn {
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+  }
+
+  /* ── 상세 조리법 열기 버튼 ── */
+  .recipe-open-btn {
+    display: block;
+    width: 100%;
+    margin: 0 0 12px;
+    padding: 13px 14px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    box-shadow: 0 3px 10px rgba(37,99,235,0.25);
+    cursor: pointer;
+  }
+  .recipe-open-btn small {
+    display: block;
+    margin-top: 3px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #dbeafe;
+    letter-spacing: -0.2px;
+  }
+
+  /* ── 시기별 표 일차 버튼 ── */
+  .day-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 8px;
+  }
+  .day-chip {
+    border: 1px solid #c7d2fe;
+    background: #eef2ff;
+    color: #3730a3;
+    border-radius: 999px;
+    padding: 5px 10px;
+    font-size: 11.5px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .day-chip:active { background: #e0e7ff; }
+
+  /* ── 복사 버튼 ── */
+  .copy-btn {
+    border: 1px solid var(--border);
+    background: #f8fafc;
+    color: #475569;
+    border-radius: 8px;
+    padding: 4px 9px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .copy-btn:active { background: #eef2f7; }
+
+  /* ── 토스트 ── */
+  #toast {
+    position: fixed;
+    left: 50%;
+    bottom: 26px;
+    transform: translateX(-50%) translateY(16px);
+    background: rgba(15,23,42,0.92);
+    color: #fff;
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 9px 16px;
+    border-radius: 999px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .18s, transform .18s;
+    z-index: 3000;
+    max-width: 88vw;
+    text-align: center;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  /* ── 상세 조리법 모달 ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15,23,42,0.5);
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    z-index: 2000;
+    opacity: 0;
+    transition: opacity .18s;
+  }
+  .modal-overlay.show { opacity: 1; }
+  .modal-overlay.hidden { display: none; }
+  .modal-sheet {
+    width: 100%;
+    max-width: 600px;
+    max-height: 92vh;
+    background: #fff;
+    border-radius: 20px 20px 0 0;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(18px);
+    transition: transform .18s;
+  }
+  .modal-overlay.show .modal-sheet { transform: translateY(0); }
+  .modal-head {
+    position: sticky;
+    top: 0;
+    background: linear-gradient(135deg, #1e3a5f 0%, #2b5282 100%);
+    color: #fff;
+    padding: 14px 15px 12px;
+    border-radius: 20px 20px 0 0;
+  }
+  .modal-head .m-tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    border-radius: 999px;
+    padding: 3px 9px;
+    font-size: 10.5px;
+    font-weight: 800;
+    margin-bottom: 6px;
+  }
+  .modal-head h2 {
+    margin: 0;
+    font-size: 16.5px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    line-height: 1.35;
+    padding-right: 74px;
+  }
+  .modal-head .m-sub {
+    margin: 5px 0 0;
+    font-size: 11.5px;
+    color: #cbd5e1;
+    line-height: 1.45;
+  }
+  .modal-head-btns {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    gap: 6px;
+  }
+  .modal-head-btns .copy-btn {
+    background: rgba(255,255,255,0.18);
+    border-color: rgba(255,255,255,0.35);
+    color: #fff;
+  }
+  .modal-close {
+    border: none;
+    background: rgba(255,255,255,0.18);
+    color: #fff;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+  }
+  .modal-body {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 13px 14px 28px;
+  }
+  .recipe-sec {
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 11px 12px;
+    margin-bottom: 10px;
+    background: #fff;
+  }
+  .recipe-sec h4 {
+    margin: 0 0 6px;
+    font-size: 12.5px;
+    font-weight: 800;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .recipe-sec .lead {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0;
+    line-height: 1.55;
+  }
+  .recipe-sec ol, .recipe-sec ul {
+    margin: 0;
+    padding-left: 18px;
+    font-size: 12.5px;
+    color: #334155;
+    line-height: 1.62;
+  }
+  .recipe-sec li { margin-bottom: 4px; }
+  .recipe-sec li:last-child { margin-bottom: 0; }
+  .amt-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .amt-table td {
+    border-bottom: 1px dashed #e2e8f0;
+    padding: 5px 2px;
+    vertical-align: top;
+    color: #334155;
+  }
+  .amt-table tr:last-child td { border-bottom: none; }
+  .amt-table td:first-child { font-weight: 800; color: #0f172a; width: 92px; }
+  .amt-table td:nth-child(2) { font-weight: 700; color: #1d4ed8; width: 92px; }
+  .amt-table td:last-child { font-size: 11.5px; color: #64748b; }
+  .recipe-sec.oil { background: var(--amber-soft); border-color: #fde68a; }
+  .recipe-sec.oil h4 { color: var(--amber); }
+  .recipe-sec.watch { background: var(--green-soft); border-color: #bbf7d0; }
+  .recipe-sec.watch h4 { color: var(--green); }
+  .recipe-sec.caution { background: var(--red-soft); border-color: #fecaca; }
+  .recipe-sec.caution h4 { color: var(--red); }
+
+  /* ── 알레르기 체크 ── */
+  .privacy-note {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 11px;
+    padding: 9px 11px;
+    font-size: 11.5px;
+    color: #1e3a8a;
+    line-height: 1.55;
+    margin-bottom: 10px;
+  }
+  .privacy-note b { color: #1e40af; }
+  .prog-wrap { margin-bottom: 9px; }
+  .prog-bar {
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 999px;
+    overflow: hidden;
+    display: flex;
+  }
+  .prog-bar span { display: block; height: 100%; }
+  .prog-bar .p-pass { background: #16a34a; }
+  .prog-bar .p-warn { background: #f59e0b; }
+  .prog-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 7px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #475569;
+  }
+  .prog-legend .lg { display: flex; align-items: center; gap: 4px; }
+  .prog-legend i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+  .prog-legend .i-pass { background: #16a34a; }
+  .prog-legend .i-warn { background: #f59e0b; }
+  .prog-legend .i-none { background: #cbd5e1; }
+  .prog-pct {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--navy);
+    margin-bottom: 5px;
+  }
+  .food-item .food-allergy {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 7px;
+    padding-top: 7px;
+    border-top: 1px dashed #e2e8f0;
+  }
+  .status-btn {
+    border: 1px solid var(--border);
+    background: #f8fafc;
+    color: #64748b;
+    border-radius: 999px;
+    padding: 4px 9px;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .status-btn.on-pass { background: #dcfce7; border-color: #86efac; color: #15803d; }
+  .status-btn.on-warn { background: #fef3c7; border-color: #fcd34d; color: #b45309; }
+  .status-btn.on-none { background: #eef2f7; border-color: #cbd5e1; color: #334155; }
+  .food-meta {
+    font-size: 10.5px;
+    color: #64748b;
+    margin-left: auto;
+  }
+  .food-meta-edit {
+    margin-top: 6px;
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .food-meta-edit input[type="date"] {
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    padding: 3px 6px;
+    font-size: 11.5px;
+    max-width: 132px;
+  }
+  .food-meta-edit input[type="text"] {
+    flex: 1;
+    min-width: 110px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    padding: 3px 7px;
+    font-size: 11.5px;
+  }
+  .quick-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  .quick-row select {
+    flex: 1;
+    min-width: 0;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    padding: 7px 8px;
+    font-size: 13px;
+    background: #fff;
+    color: var(--text);
+  }
+  .recent-list { display: flex; flex-wrap: wrap; gap: 5px; }
+  .recent-chip {
+    border-radius: 999px;
+    padding: 4px 9px;
+    font-size: 11px;
+    font-weight: 700;
+    border: 1px solid var(--border);
+    background: #f8fafc;
+    color: #475569;
+    cursor: pointer;
+  }
+  .recent-chip.pass { background: #dcfce7; border-color: #86efac; color: #15803d; }
+  .recent-chip.warn { background: #fef3c7; border-color: #fcd34d; color: #b45309; }
+  .btn-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 9px; }
+  .link-btn {
+    border: 1px solid var(--border);
+    background: #fff;
+    color: #475569;
+    border-radius: 9px;
+    padding: 6px 10px;
+    font-size: 11.5px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .link-btn:active { background: #f1f5f9; }
+  .link-btn.danger { color: #b91c1c; border-color: #fecaca; }
+
+  @media (max-width: 360px) {
+    .tab-btn { font-size: 10px; letter-spacing: -0.6px; }
+    .amt-table td:first-child { width: 78px; }
+    .amt-table td:nth-child(2) { width: 78px; }
+    .modal-head h2 { font-size: 15.5px; padding-right: 64px; }
+  }
 </style>
 </head>
 <body>
@@ -439,7 +809,7 @@
 <div class="header">
   <div class="badge">삐뽀삐뽀 119 · 대한소아청소년과학회 기준</div>
   <h1>석이네 이유식 계산기 &amp; 식재료 백과</h1>
-  <p>일차별 권장량 · N배죽 물양 · <span id="foodTotal">261</span>종 식재료 · 소아과 최신 지침까지 한 번에</p>
+  <p>일차별 권장량 · N배죽 물양 · <span id="foodTotal">261</span>종 식재료 · 알레르기 체크 · 최신 지침</p>
 </div>
 
 <div class="container">
@@ -458,17 +828,18 @@
         <label for="startDate">이유식 시작일</label>
         <input type="date" id="startDate" onchange="calcFromStartDate()" />
       </div>
+      <div style="font-size:11px; color:#64748b; margin:-6px 0 10px;">시작일을 넣으면 오늘 일차가 자동으로 계산되고, 이 기기(브라우저)에만 저장돼요.</div>
 
       <div class="sec-title">이유식 몇 일차인가요? (직접 조절 가능)</div>
       <div class="day-row">
         <button class="day-btn" onclick="changeDay(-1)">-</button>
         <div class="day-input-wrap">
-          <input type="number" id="dayInput" value="11" min="1" max="365" oninput="render()" />
+          <input type="number" id="dayInput" value="1" min="1" max="365" oninput="render()" />
           <span>일차</span>
         </div>
         <button class="day-btn" onclick="changeDay(1)">+</button>
       </div>
-      <input type="range" id="dayRange" min="1" max="200" value="11" oninput="syncRange(this.value)" />
+      <input type="range" id="dayRange" min="1" max="200" value="1" oninput="syncRange(this.value)" />
 
       <div class="sec-title" style="margin-top:4px;">아기 생후 개월 수 (만 개월)</div>
       <div class="pills" id="monthPills">
@@ -482,7 +853,15 @@
 
     <div class="stage-banner">
       <div class="tag" id="stageTag">초기 전반</div>
-      <h2 id="stageTitle">초기 전반 (적응기 · 11일차)</h2>
+      <h2 id="stageTitle">초기 전반 (적응기 · 1일차)</h2>
+    </div>
+
+    <button class="recipe-open-btn" onclick="openRecipe(currentDay())">
+      📖 <span id="recipeOpenLabel">1일차 상세 조리법</span> 보기
+      <small>질감 · 계량 · 조리 순서 · 큐브 · 오일 타이밍까지 한 번에</small>
+    </button>
+    <div class="btn-row" style="margin:-4px 0 12px;">
+      <button class="link-btn" onclick="copyToday()">📋 오늘 계산 결과 복사</button>
     </div>
 
     <div class="grid-2">
@@ -521,6 +900,20 @@
 
     <div class="tip-box">
       <strong>알레르기 예방 &amp; 새 재료 3일 룰:</strong> 새 재료는 한 번에 1가지씩, 오전에 <strong>1/4작은술부터 3~4일</strong> 먹이며 발진·구토·설사를 살펴요. 달걀(완숙)·땅콩버터(묽게 풀어서)·우유(요거트·치즈)·밀가루·생선은 <strong>늦추지 말고 7개월 전에</strong> 경험시키는 게 최신 지침이에요. 한 번 먹고 끝내지 말고 일주일에 몇 번씩 꾸준히 식단에 넣어 주세요. 중등도 이상 습진이나 계란 알레르기가 있으면 땅콩은 소아과와 먼저 상의해요. → 자세한 내용은 <strong>「최신 지침」 탭</strong>
+    </div>
+
+    <div class="card">
+      <div class="sec-title">오늘 먹이는 재료, 알레르기 체크</div>
+      <div class="quick-row">
+        <select id="quickFood" aria-label="재료 선택"></select>
+        <button class="copy-btn" style="padding:8px 10px;" onclick="quickSet('pass')">✅ 통과</button>
+        <button class="copy-btn" style="padding:8px 10px;" onclick="quickSet('warn')">⚠️ 주의</button>
+      </div>
+      <div class="recent-list" id="recentList"></div>
+      <div class="privacy-note" style="margin:10px 0 0;">
+        체크한 기록은 외부 서버로 전송되지 않고 <b>내 기기(브라우저)에만</b> 안전하게 저장됩니다. 링크를 공유받아 사용하셔도 내 기록은 내 폰에만 따로 저장되며, 다른 사람과 섞이거나 외부로 전송되지 않습니다.
+      </div>
+      <div style="font-size:11px; color:#64748b; margin-top:6px;">재료·통과·주의를 고르면 바로 저장돼요. 날짜와 메모는 「식재료 백과」 탭에서 붙일 수 있어요.</div>
     </div>
   </div>
 
@@ -602,8 +995,25 @@
   <!-- TAB 3: 식재료 백과 -->
   <div id="tab-food" class="hidden">
     <div class="card">
+      <div class="sec-title">알레르기 체크 진행률</div>
+      <div class="prog-pct" id="progPct"></div>
+      <div class="prog-wrap">
+        <div class="prog-bar" id="progBar"></div>
+        <div class="prog-legend" id="progLegend"></div>
+      </div>
+      <div class="privacy-note">
+        체크한 기록은 외부 서버로 전송되지 않고 <b>내 기기(브라우저)에만</b> 안전하게 저장됩니다. 링크를 공유받아 사용하셔도 내 기록은 내 폰에만 따로 저장되며, 다른 사람과 섞이거나 외부로 전송되지 않습니다.
+      </div>
+      <div class="btn-row">
+        <button class="link-btn" onclick="exportAllergy()">기록 JSON 내보내기</button>
+        <button class="link-btn" onclick="document.getElementById('importFile').click()">불러오기</button>
+        <input type="file" id="importFile" accept=".json,application/json" class="hidden" onchange="importAllergy(this)" />
+        <button class="link-btn danger" onclick="resetAllergy()">전체 초기화</button>
+      </div>
+    </div>
+    <div class="card">
       <input type="text" class="search-input" id="foodSearch" placeholder="재료 검색 (예: 콜리플라워, 소고기, 시금치, 꿀, 두부)" oninput="renderFoods()" />
-      <div class="pills" id="catPills" style="margin-bottom:8px;">
+      <div class="pills" id="catPills" style="margin-bottom:6px;">
         <button class="pill active" onclick="setCat('전체', this)">전체</button>
         <button class="pill" onclick="setCat('채소', this)">채소</button>
         <button class="pill" onclick="setCat('고기·생선', this)">고기·생선</button>
@@ -612,6 +1022,12 @@
         <button class="pill" onclick="setCat('유제품·계란', this)">유제품·계란</button>
         <button class="pill" onclick="setCat('해조·기름', this)">해조·기름</button>
         <button class="pill" onclick="setCat('주의·금지', this)">⚠️ 주의·금지</button>
+      </div>
+      <div class="pills" id="statusPills" style="margin-bottom:8px;">
+        <button class="pill active" onclick="setStatus('전체', this)">알레르기 전체</button>
+        <button class="pill" onclick="setStatus('pass', this)">✅ 통과만</button>
+        <button class="pill" onclick="setStatus('warn', this)">⚠️ 주의만</button>
+        <button class="pill" onclick="setStatus('none', this)">미시도만</button>
       </div>
       <div class="food-count" id="foodCount"></div>
       <div id="foodList"></div>
@@ -628,6 +1044,13 @@
         <p><strong>수유:</strong> 하루 500~900cc (최소 500~600cc 이상)</p>
         <p><strong>물:</strong> 모유·분유로 충분해요. 이유식을 시작했으니 식후에 끓여 식힌 물 몇 모금부터</p>
         <p><strong>단계:</strong> 쌀미음 → 소고기 10~20g 매일 → 잎채소 순서로 하나씩</p>
+        <div class="day-chips">
+          <button class="day-chip" onclick="openRecipe(1)">1일차</button>
+          <button class="day-chip" onclick="openRecipe(4)">4일차</button>
+          <button class="day-chip" onclick="openRecipe(8)">8일차</button>
+          <button class="day-chip" onclick="openRecipe(14)">14일차</button>
+          <button class="copy-btn" onclick="copyStage(0)">복사</button>
+        </div>
       </div>
       <div class="stage-card">
         <h4>2. 초기 후반 (15~30일차 · 만 6개월)</h4>
@@ -636,6 +1059,12 @@
         <p><strong>포인트:</strong> 계란 노른자+흰자 완숙 함께 시작, 카놀라유 첨가</p>
         <p><strong>물:</strong> 하루 120ml 이내로 몇 모금씩 · 수유량은 그대로 유지</p>
         <p><strong>알레르기:</strong> 계란·밀가루·땅콩버터·생선을 이 무렵 소량씩 시작 (오전에 3~4일 관찰)</p>
+        <div class="day-chips">
+          <button class="day-chip" onclick="openRecipe(15)">15일차</button>
+          <button class="day-chip" onclick="openRecipe(22)">22일차</button>
+          <button class="day-chip" onclick="openRecipe(30)">30일차</button>
+          <button class="copy-btn" onclick="copyStage(1)">복사</button>
+        </div>
       </div>
       <div class="stage-card">
         <h4>3. 중기 (31~90일차 · 만 7~8개월)</h4>
@@ -644,6 +1073,14 @@
         <p><strong>포인트:</strong> 핑거푸드 골든타임! 고기 매일 10~20g</p>
         <p><strong>물:</strong> 하루 120~240ml · 컵·빨대컵 연습 시작 (AAP 6~12개월 기준)</p>
         <p><strong>질감:</strong> 8개월엔 손으로 집어먹기 · 새 음식 거부하면 8~10번 다시 권하기</p>
+        <div class="day-chips">
+          <button class="day-chip" onclick="openRecipe(31)">31일차</button>
+          <button class="day-chip" onclick="openRecipe(46)">46일차</button>
+          <button class="day-chip" onclick="openRecipe(61)">61일차</button>
+          <button class="day-chip" onclick="openRecipe(76)">76일차</button>
+          <button class="day-chip" onclick="openRecipe(90)">90일차</button>
+          <button class="copy-btn" onclick="copyStage(2)">복사</button>
+        </div>
       </div>
       <div class="stage-card">
         <h4>4. 후기 (91~180일차 · 만 9~11개월)</h4>
@@ -652,6 +1089,13 @@
         <p><strong>포인트:</strong> 고기 매일 20~30g, 숟가락 쥐여주기 &amp; 밥·반찬 분리</p>
         <p><strong>물:</strong> 하루 120~240ml · 끼니마다 곁들여 주기</p>
         <p><strong>질감:</strong> <u>10개월까지는 덩어리·단단한 음식을 꼭 시작</u> — 늦으면 씹고 삼키는 데 문제가 생길 수 있어요</p>
+        <div class="day-chips">
+          <button class="day-chip" onclick="openRecipe(91)">91일차</button>
+          <button class="day-chip" onclick="openRecipe(121)">121일차</button>
+          <button class="day-chip" onclick="openRecipe(151)">151일차</button>
+          <button class="day-chip" onclick="openRecipe(180)">180일차</button>
+          <button class="copy-btn" onclick="copyStage(3)">복사</button>
+        </div>
       </div>
       <div class="stage-card" style="margin-bottom:0;">
         <h4>5. 완료기 (181일차~ · 만 12~18개월)</h4>
@@ -659,6 +1103,12 @@
         <p><strong>묽기:</strong> 2배죽 진밥 → 어른 밥 (7~10mm)</p>
         <p><strong>포인트:</strong> 생우유·꿀 전환 가능, 두 돌까지 무염 식단 유지</p>
         <p><strong>물·우유:</strong> 생우유 하루 400~500ml · 물 240~950ml (AAP 1~2세) · 우유가 물을 대신하지 않아요</p>
+        <div class="day-chips">
+          <button class="day-chip" onclick="openRecipe(181)">181일차</button>
+          <button class="day-chip" onclick="openRecipe(271)">271일차</button>
+          <button class="day-chip" onclick="openRecipe(365)">365일차</button>
+          <button class="copy-btn" onclick="copyStage(4)">복사</button>
+        </div>
       </div>
     </div>
     <div class="tip-box">
@@ -802,6 +1252,23 @@
       <p class="g-sub" style="margin-top:10px; margin-bottom:0;">아이마다 성장과 알레르기 병력이 달라요. 이 화면은 참고용이고, 판단이 필요한 부분은 소아청소년과 선생님과 상의하세요.</p>
     </div>
   </div>
+
+<!-- 상세 조리법 모달 -->
+<div class="modal-overlay hidden" id="recipeModal">
+  <div class="modal-sheet" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="modal-head" style="position:relative;">
+      <div class="modal-head-btns">
+        <button class="copy-btn" onclick="copyRecipe()">복사</button>
+        <button class="modal-close" onclick="closeRecipe()" aria-label="닫기">✕</button>
+      </div>
+      <span class="m-tag" id="mTag"></span>
+      <h2 id="mTitle"></h2>
+      <p class="m-sub" id="mSub"></p>
+    </div>
+    <div class="modal-body" id="mBody"></div>
+  </div>
+</div>
+<div id="toast"></div>
 
   <div class="footer">석화 님 블로그(blog.naver.com/tjrghk1999) · 삐뽀삐뽀 119 기준</div>
 </div>
@@ -1081,6 +1548,1083 @@ const foods = [
   { name: "매실청·매실액", cat: "주의·금지", when: "돌 전 금지", cls: "b-ban", desc: "돌 전 금지 · 설탕에 절인 청이라 당이 매우 높고, 덜 익은 매실은 독성분이 있어요. 돌 이후에도 물에 아주 연하게 타서 맛 정도만 내고, 매실 열매 자체는 주지 마세요." },
 ];
 
+/* ══════════════════════════════════════════════════════════════
+   v3 추가 기능
+   1) 일차별 상세 조리법 모달 (초기·중기·후기·완료기)
+   2) 음식별 알레르기 통과 체크 — localStorage 전용 저장
+   3) 원클릭 복사
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── 1. 일차별 상세 조리법 데이터 ───────────────────────────── */
+const RECIPES = [
+  {
+    from: 1, to: 3, stage: '초기 전반',
+    name: '첫 미음 (쌀미음)',
+    texture: '10배미음 · 체에 거른 완전 미음. 숟가락을 기울이면 뚝뚝 떨어지는 수프 농도이고 입자는 없어요.',
+    amounts: [
+      ['불린 쌀', '10g', '생쌀 8g · 씻어 30분~1시간 불린 뒤 물기 빼고 계량'],
+      ['물', '100ml', '쌀 무게의 10배(10배미음)'],
+      ['카놀라유', '2~3방울', '약 0.5cc · 데운 뒤 먹이기 직전'],
+      ['한 끼 양', '15~30g', '1~2숟가락 · 하루 1회']
+    ],
+    yieldNote: '위 양을 끓이면 약 70~80g이에요. 15~20g씩 나눠 3~4일치로 얼려요.',
+    steps: [
+      '쌀은 씻어 30분~1시간 불리고 체에 밭쳐 물기를 빼요.',
+      '냄비에 불린 쌀 10g과 물 100ml를 넣고 센 불에 올려요.',
+      '끓기 시작하면 약불로 줄이고 15~20분, 나무주걱으로 바닥을 긁어가며 저어요.',
+      '불을 끄고 5분 뜸을 들인 뒤 고운 체에 부어 주걱으로 눌러 걸러요.',
+      '되직하면 끓여 식힌 물을 1숟가락씩 넣어 농도를 맞춰요.',
+      '그릇에 덜어 40℃쯤으로 식힌 뒤 카놀라유를 넣고 먹여요.'
+    ],
+    keep: [
+      '15~20g씩 큐브에 담고 뚜껑을 덮어 식힌 뒤 냉동해요. 냉동은 1주 안에 먹여요.',
+      '해동은 전날 밤 냉장고로 옮기거나 중탕으로 해요. 상온 해동은 피해요.',
+      '전자레인지는 10초씩 끊어 중간에 저어요. 위아래 온도 차가 생기지 않게요.',
+      '먹이기 전 74℃ 이상으로 충분히 데운 뒤 40℃쯤으로 식혀요. 한 번 데운 것은 다시 데우지 말고 남기지 않아요.'
+    ],
+    oil: '첫날부터 넣어도 돼요. 하루 2.5cc(작은술 반)를 기준으로 한 끼에 나눠 넣고, 미음을 데워 40℃쯤 됐을 때 먹이기 직전에 넣어요. 넣은 뒤 다시 끓이면 산화되니 불을 끈 상태에서 넣어요.',
+    feed: [
+      '이유식은 오전 9~10시, 아기가 깬 뒤 컨디션이 좋을 때 줘요.',
+      '이유식 직후 분유·모유로 보충 수유해서 한 끼를 마무리해요.',
+      '하루 수유량은 500~900cc를 유지해요. 이유식을 먹는다고 수유를 줄이지 않아요.'
+    ],
+    watch: [
+      '첫날은 1작은술부터. 같은 재료로 3일 먹이며 입 주변 발진·구토·설사·변 상태를 봐요.',
+      '숟가락은 혀 위에 올리고 아기가 삼킬 때까지 기다려요. 입에 밀어 넣지 않아요.'
+    ],
+    caution: [
+      '꿀·생우유·소금·설탕은 돌 전 금지예요.',
+      '체에 거른 미음만 오래 주면 덩어리 음식을 거부할 수 있어요. 잘 먹으면 2주 안에 7배죽으로 올려요.',
+      '4개월 전에는 어떤 음식도 주지 않아요. 만 6개월(180일) 전후에 시작해요.'
+    ]
+  },
+  {
+    from: 4, to: 7, stage: '초기 전반',
+    name: '소고기 미음 (철분 시작)',
+    texture: '10~8배미음 · 체에 거른 미음에 곱게 다진 소고기를 섞은 농도예요.',
+    amounts: [
+      ['불린 쌀', '10~12g', '생쌀 8~10g'],
+      ['물', '100~120ml', '10~8배미음'],
+      ['소고기', '5~10g', '안심·우둔 · 기름·힘줄 제거'],
+      ['카놀라유', '2~3방울', '먹이기 직전'],
+      ['한 끼 양', '20~30g', '하루 1회']
+    ],
+    yieldNote: '고기를 넣으면 미음이 되직해져요. 물을 10ml 더 넣고 농도를 맞춰요.',
+    steps: [
+      '소고기는 찬물에 20~30분 담가 핏물을 빼고 기름·힘줄을 도려내요.',
+      '끓는 물에 넣고 20분 이상 푹 삶아요. 가운데를 갈라 속까지 회색으로 익었는지 확인해요.',
+      '건져서 곱게 다지고, 다진 뒤 체에 한 번 더 눌러 거르면 더 부드러워요.',
+      '쌀과 물을 센 불에 올려 끓으면 약불로 줄이고 15~20분 저어가며 끓여요.',
+      '체에 걸러 미음을 만들고 다진 소고기를 넣어 2~3분 더 끓여요.',
+      '40℃쯤 식힌 뒤 카놀라유를 넣어 먹여요.'
+    ],
+    keep: [
+      '미음은 20g씩, 다진 소고기는 5~10g씩 따로 큐브로 얼려요. 먹일 때 함께 데워요.',
+      '고기 삶은 물은 거품과 기름을 걷고 체에 걸러 미음 물로 써도 돼요. 다만 고기 자체도 꼭 다져서 먹여요.',
+      '냉동은 1주, 냉장은 24시간 안에 먹여요.',
+      '74℃ 이상으로 충분히 데운 뒤 40℃로 식혀요.'
+    ],
+    oil: '하루 2.5cc 기준이에요. 미음을 데워 40℃쯤 됐을 때 먹이기 직전에 넣어요. 고기 비린 맛이 걱정되면 오일에 살짝 섞어 넣어도 돼요.',
+    feed: [
+      '하루 1회, 오전 9~10시에 줘요.',
+      '이유식 직후 보충 수유로 한 끼를 마무리해요.',
+      '하루 수유량은 500~900cc를 유지해요.'
+    ],
+    watch: [
+      '철분은 이유식 초기부터 매일 필요해요. 소고기는 매일 5~10g씩 넣어요.',
+      '변이 검붉게 변할 수 있어요. 고기 색 때문이니 놀라지 말고, 설사나 점액이 섞이면 하루 쉬어요.',
+      '새 채소를 함께 넣을 땐 한 번에 한 가지씩만 넣어요.'
+    ],
+    caution: [
+      '고기 육수만 먹이면 철분이 부족해요. 삶은 고기를 다져서 먹여요.',
+      '덜 익은 고기는 살모넬라·리스테리아 위험이 있어 속까지 완전히 익혀요.'
+    ]
+  },
+  {
+    from: 8, to: 14, stage: '초기 전반',
+    name: '소고기 + 채소 미음',
+    texture: '10~8배미음 · 채소는 곱게 다져 넣어 아주 작은 입자가 살짝 남는 정도예요.',
+    amounts: [
+      ['불린 쌀', '15g', '생쌀 12g'],
+      ['물', '120~150ml', '10~8배미음'],
+      ['소고기', '10g', '곱게 다져서'],
+      ['채소', '5~10g', '한 가지 · 잎 30초~1분, 뿌리 5~10분 데치기'],
+      ['카놀라유', '3방울', '먹이기 직전'],
+      ['한 끼 양', '30~60g', '하루 1회']
+    ],
+    yieldNote: '약 90~100g이 나와요. 20~25g씩 4큐브로 나눠요.',
+    steps: [
+      '채소는 껍질·씨·심지를 제거하고 연한 부분만 골라요.',
+      '끓는 물에 데쳐요. 잎채소는 30초~1분, 뿌리채소는 5~10분이에요.',
+      '데친 물은 버리고 곱게 다져요.',
+      '쌀과 물로 미음을 끓이고(끓으면 약불 15~20분) 체에 걸러요.',
+      '다진 소고기를 넣어 2~3분, 다진 채소를 넣어 2~3분 더 끓여요.',
+      '40℃로 식힌 뒤 카놀라유를 넣어요.'
+    ],
+    keep: [
+      '채소 퓌레는 10~15g씩 따로 얼리면 새 채소를 바꿔 끼우기 쉬워요.',
+      '냉동은 1주, 냉장은 24시간 안에 먹여요.',
+      '74℃ 이상 데운 뒤 40℃로 식혀요.'
+    ],
+    oil: '하루 2.5cc 기준이에요. 데운 미음에 먹이기 직전에 넣어요.',
+    feed: [
+      '하루 1회, 오전에 줘요.',
+      '이유식 후 보충 수유, 하루 수유량 500~900cc를 유지해요.'
+    ],
+    watch: [
+      '새 채소는 3일 간격으로 하나씩, 오전에 줘요.',
+      '색깔 순서(흰색 → 초록 → 주황)로 가면 변·가스 반응을 가려내기 쉬워요.',
+      '첫날은 1작은술부터 시작해 양을 늘려요.'
+    ],
+    caution: [
+      '잎채소 데친 물은 질산염이 우러나니 버려요. 그 물로 미음을 끓이지 않아요.',
+      '시금치·당근·배추처럼 질산염이 많은 채소는 만 6개월 전엔 주지 않아요.'
+    ]
+  },
+  {
+    from: 15, to: 21, stage: '초기 후반',
+    name: '7배죽 + 계란 첫 경험',
+    texture: '7배죽 · 믹서에 대충 갈거나 굵은 체로 걸러 살짝 입자가 남는 농도예요.',
+    amounts: [
+      ['불린 쌀', '20g', '잡곡 20%까지 섞어도 돼요(현미·흑미 제외)'],
+      ['물', '140ml', '7배죽'],
+      ['소고기', '10~15g', '다져서'],
+      ['채소', '10g', '한 가지'],
+      ['계란', '1/4개', '12분 완숙 · 노른자+흰자 함께'],
+      ['카놀라유', '2~3방울', '먹이기 직전'],
+      ['한 끼 양', '45~70g', '1일 1~2회']
+    ],
+    yieldNote: '약 120g이 나와요. 40~50g씩 3큐브로 나눠요.',
+    steps: [
+      '쌀 20g에 잡곡을 20%까지 섞어 1시간 불려요.',
+      '물 140ml로 끓이고 약불에서 20분 저어가며 끓여요.',
+      '소고기는 삶아 다지고, 채소는 데쳐 다져요.',
+      '계란은 끓는 물에 12분 삶아 완숙으로 익혀 1/4개를 으깨요. 첫날은 1/4작은술부터요.',
+      '죽에 고기·채소를 넣어 3분 더 끓이고, 계란은 그릇에 덜어 올려요.',
+      '40℃로 식힌 뒤 카놀라유를 넣어요.'
+    ],
+    keep: [
+      '계란은 그때그때 삶아요. 삶은 계란은 냉장 2일 안에 쓰고, 으깬 계란을 얼리지는 않아요.',
+      '죽은 40~50g씩 큐브로 얼려 1주 안에 먹여요.',
+      '74℃ 이상 데운 뒤 40℃로 식혀요.'
+    ],
+    oil: '하루 2.5cc 기준이에요. 7배죽으로 넘어가면 이유식 100g당 5cc를 기준으로 조금씩 늘려도 돼요. 데운 뒤 먹이기 직전에 넣어요.',
+    feed: [
+      '1일 1~2회로 늘려요. 오전 9~10시, 오후 5시예요.',
+      '수유량은 500~900cc를 유지하고, 이유식 직후 보충 수유를 해요.'
+    ],
+    watch: [
+      '계란은 첫날 1/4작은술부터. 48시간 살펴보고 이상이 없으면 1/4개까지 늘려요.',
+      '중등도 이상 습진이나 계란 알레르기가 있으면 소아과와 먼저 상의해요.',
+      '미음보다 입자가 있어 헛구역질할 수 있어요. 정상 보호반응이니 다시 곱게 갈지 말고 천천히 다시 권해요.'
+    ],
+    caution: [
+      '계란 노른자와 흰자를 나누지 말고 처음부터 완숙으로 함께 줘요.',
+      '꿀·생우유·소금 간은 계속 금지예요.'
+    ]
+  },
+  {
+    from: 22, to: 30, stage: '초기 후반',
+    name: '5~7배죽 · 알레르기 식품 도입',
+    texture: '5~7배죽 · 절구로 으깨거나 칼로 다져 2~3mm 입자가 느껴지는 정도예요.',
+    amounts: [
+      ['불린 쌀', '25g', '잡곡 30%까지'],
+      ['물', '150ml', '6배 정도'],
+      ['소고기', '15g', '다져서'],
+      ['채소', '2종 각 10g', '데쳐 다져서'],
+      ['알레르기 식품', '1가지', '하루 하나만 · 밀가루·땅콩버터·생선·요거트 중'],
+      ['카놀라유', '2~3방울', '먹이기 직전'],
+      ['한 끼 양', '70~80g', '1일 1~2회']
+    ],
+    yieldNote: '약 140g이 나와요. 70g씩 2큐브로 나눠요.',
+    steps: [
+      '쌀+물을 끓이고 약불에서 15~20분 저어가며 6배죽을 만들어요.',
+      '소고기는 삶아 다지고, 채소는 각각 데쳐 다져요.',
+      '알레르기 식품을 한 가지 준비해요. 밀가루는 수제 소면 1~2cm 토막을 10분 삶아 잘게, 땅콩버터는 뜨거운 물이나 이미 먹던 죽에 1/4작은술 묽게 풀어서, 흰살생선(대구·가자미)은 5g 쪄서 가시를 빼고, 요거트는 플레인 1/2작은술이에요.',
+      '그릇에 죽을 깔고 고기·채소를 토핑처럼 올려요.',
+      '새 알레르기 식품은 맨 처음 1/4작은술만 따로 먹여요.',
+      '40℃로 식힌 뒤 카놀라유를 넣어요.'
+    ],
+    keep: [
+      '재료를 따로 조리해 각각 큐브로 얼리면 조합을 바꾸기 쉬워요.',
+      '생선은 조리한 뒤 바로 얼리고 1주 안에 먹여요.',
+      '74℃ 이상 데운 뒤 40℃로 식혀요.'
+    ],
+    oil: '하루 2.5~3.5cc로 조금씩 늘려요(이유식 100g당 5cc 기준). 데운 뒤 먹이기 직전에 넣어요.',
+    feed: [
+      '1일 1~2회. 잘 먹으면 2회로 자리를 잡아요.',
+      '수유량은 500~900cc를 유지해요.'
+    ],
+    watch: [
+      '새 알레르기 식품은 하루에 하나만, 오전에 줘요. 3~4일(질병관리청 3~7일) 반응을 보고 양을 늘려요.',
+      '한 번 먹고 끝내지 말고 일주일에 2~3번씩 꾸준히 식단에 넣어야 예방 효과가 유지돼요.',
+      '입술 붓기·두드러기·반복 구토·쌕쌕거림이 있으면 바로 병원에 가요.'
+    ],
+    caution: [
+      '통땅콩·덩어리 땅콩버터·통견과류는 질식 위험으로 금지예요.',
+      '생우유를 음료로 주는 건 돌 이후예요. 요거트·치즈 같은 가공 유제품만 이유식에 써요.'
+    ]
+  },
+  {
+    from: 31, to: 45, stage: '중기',
+    name: '중기 첫 죽 · 재료 따로 올리기',
+    texture: '7~5배죽 · 3mm 다지기. 부드러운 두부보다 살짝 무른 정도예요.',
+    amounts: [
+      ['불린 쌀', '30g', '잡곡 30~50%'],
+      ['물', '180~200ml', '6~5배죽'],
+      ['소고기', '10~15g', '다져서'],
+      ['채소', '2종 각 10g', '3mm로 다져서'],
+      ['카놀라유', '3~4cc', '하루 기준 · 먹이기 직전'],
+      ['한 끼 양', '70~100g', '1일 2회']
+    ],
+    yieldNote: '약 160~180g이 나와요. 한 끼씩 2큐브로 나눠요.',
+    steps: [
+      '쌀+물을 끓여 6~5배죽을 만들어요. 끓으면 약불에서 20분 저어요.',
+      '소고기는 삶아 3mm로 다져요.',
+      '채소는 각각 데쳐 3mm로 다져요.',
+      '그릇에 죽을 깔고 고기·채소를 따로 올려 아이가 맛과 질감을 골라 먹게 해요.',
+      '40℃로 식힌 뒤 카놀라유를 넣어요.'
+    ],
+    keep: [
+      '고기·채소를 각각 큐브로 얼려 두고 먹일 때 꺼내 데워요.',
+      '냉동 1주, 냉장 24시간 안에 먹여요.',
+      '74℃ 이상 데운 뒤 40℃로 식혀요.'
+    ],
+    oil: '이유식 100g당 5cc가 기준이에요. 한 끼 70~100g이면 3.5~5cc고, 데운 뒤 먹이기 직전에 넣어요.',
+    feed: [
+      '1일 2회로 늘려요. 오전 9~10시, 오후 5~6시예요.',
+      '간식 1회를 더해요. 과일·요거트처럼 부드러운 것으로요.',
+      '수유량은 500~800cc로 조금씩 줄어도 돼요.'
+    ],
+    watch: [
+      '3mm 다진 입자로 씹는 연습을 해요. 잘 씹지 않고 삼켜도 괜찮아요.',
+      '새 음식을 거부하면 8~10번 다시 권해요. 한 번 거부로 포기하지 않아요.',
+      '핑거푸드 준비 시기예요. 연두부 1cm 큐브로 손에 쥐는 연습을 시작해요.'
+    ],
+    caution: [
+      '생선은 흰살·등푸른을 합쳐 주 2회 이하로 줘요.',
+      '먹는 동안 자리를 비우지 말고, 영아 하임리히법을 익혀 두세요.'
+    ]
+  },
+  {
+    from: 46, to: 60, stage: '중기',
+    name: '5배죽 · 하루 2~3회로',
+    texture: '5배죽 · 3mm 다지기. 밥알이 살짝 느껴질 정도예요.',
+    amounts: [
+      ['불린 쌀', '35g', '잡곡 40~50%'],
+      ['물', '180ml', '5배죽'],
+      ['소고기', '15g', '3mm로 다져서'],
+      ['채소', '2종 각 10~15g', '데쳐 3mm로'],
+      ['카놀라유', '4~5cc', '하루 기준'],
+      ['한 끼 양', '80~110g', '1일 2~3회']
+    ],
+    yieldNote: '약 200g이 나와요. 한 끼씩 나눠 얼려요.',
+    steps: [
+      '쌀+물로 5배죽을 끓여요.',
+      '고기·채소를 3mm로 다져 각각 조리해요.',
+      '죽에 섞거나 따로 올려요.',
+      '40℃로 식힌 뒤 카놀라유를 넣어요.'
+    ],
+    keep: [
+      '한 끼씩 소분해 얼리고 1주 안에 먹여요.',
+      '74℃ 이상 데운 뒤 40℃로 식혀요.'
+    ],
+    oil: '이유식 100g당 5cc 기준이에요. 데운 뒤 먹이기 직전에 넣어요.',
+    feed: [
+      '1일 2~3회로 늘려요. 아기가 배고파하는 신호를 보고 조절해요.',
+      '간식 1~2회를 더해요.',
+      '수유량은 500~800cc예요.'
+    ],
+    watch: [
+      '연두부 1cm 큐브, 잘 익은 바나나 조각으로 손으로 집어 먹는 연습을 해요.',
+      '컵이나 빨대컵으로 물 마시기 연습을 시작해요.'
+    ],
+    caution: [
+      '단단한 사과·생당근·통포도는 아직 금지예요.',
+      '하이체어에 앉혀서 먹여요.'
+    ]
+  },
+  {
+    from: 61, to: 75, stage: '중기',
+    name: '3mm 다지기 + 핑거푸드',
+    texture: '5배죽 · 3~4mm 다지기. 잇몸으로 으깰 수 있는 무르기예요.',
+    amounts: [
+      ['불린 쌀', '40g', '잡곡 50%까지'],
+      ['물', '200ml', '5배죽'],
+      ['소고기', '20g', '3~4mm로 다져서'],
+      ['채소', '3종 각 10g', '데쳐서'],
+      ['카놀라유', '5cc', '하루 기준'],
+      ['한 끼 양', '90~120g', '1일 3회']
+    ],
+    yieldNote: '약 220g이 나와요. 한 끼씩 나눠 얼려요.',
+    steps: [
+      '5배죽을 끓여요. 밥알이 살짝 남게 저어요.',
+      '고기·채소를 3~4mm로 다져 조리해요.',
+      '핑거푸드는 따로 준비해요. 연두부 1cm 막대, 바나나·아보카도 1cm 막대, 푹 익힌 단호박 조각이에요.',
+      '40℃로 식힌 뒤 카놀라유를 넣어요.'
+    ],
+    keep: [
+      '핑거푸드는 그때그때 만들어요. 남은 것은 냉장 24시간 안에요.',
+      '죽은 1주 안에 먹여요.'
+    ],
+    oil: '이유식 100g당 5cc 기준이에요. 데운 뒤 먹이기 직전에 넣어요.',
+    feed: [
+      '1일 3회로 자리를 잡아요.',
+      '간식 1~2회를 더해요.',
+      '수유량은 500~800cc예요.'
+    ],
+    watch: [
+      '핑거푸드는 아이가 앉은 자세에서만 줘요. 누워 먹으면 질식 위험이 커요.',
+      '8개월(데드라인)을 넘기면 덩어리·핑거푸드 거부가 생기기 쉬워요.'
+    ],
+    caution: [
+      '통견과·팝콘·사탕·젤리는 4세 전까지 금지예요.',
+      '먹는 모습을 계속 지켜봐요.'
+    ]
+  },
+  {
+    from: 76, to: 90, stage: '중기',
+    name: '중기 마무리 · 손으로 집어먹기',
+    texture: '5배죽 · 4mm 다지기. 어른 밥알보다 무른 상태예요.',
+    amounts: [
+      ['불린 쌀', '40~45g', '잡곡 50%'],
+      ['물', '200~220ml', '5배죽'],
+      ['소고기', '20g', '4mm로 다져서'],
+      ['채소', '3종 각 10g', '4mm로'],
+      ['카놀라유', '5cc', '하루 기준'],
+      ['한 끼 양', '100~120g', '1일 3회']
+    ],
+    yieldNote: '약 240g이 나와요. 한 끼씩 나눠 얼려요.',
+    steps: [
+      '5배죽을 끓이고 고기·채소를 4mm로 다져 조리해요.',
+      '숟가락을 아이 손에 쥐여주고 떠먹는 연습을 해요.',
+      '핑거푸드를 곁들여 스스로 집어 먹게 해요.',
+      '40℃로 식힌 뒤 카놀라유를 넣어요.'
+    ],
+    keep: [
+      '한 끼씩 소분해 얼리고 1주 안에 먹여요.',
+      '74℃ 이상 데운 뒤 40℃로 식혀요.'
+    ],
+    oil: '이유식 100g당 5cc 기준이에요.',
+    feed: [
+      '1일 3회 + 간식 2회예요.',
+      '수유량은 500~800cc예요.'
+    ],
+    watch: [
+      '숟가락을 쥐여줘도 흘려도 괜찮아요. 스스로 먹는 연습이에요.',
+      '새 음식은 여러 번 다시 권해요.'
+    ],
+    caution: [
+      '한 끼는 20~30분이 지나면 치워요.',
+      '간식으로 과일주스는 주지 않아요. 돌 전 금지예요.'
+    ]
+  },
+  {
+    from: 91, to: 120, stage: '후기',
+    name: '후기 첫 진밥 · 3배죽',
+    texture: '3배죽 · 5mm 썰기. 잘 익은 바나나처럼 잇몸으로 으깨지는 무르기예요.',
+    amounts: [
+      ['불린 쌀', '45~50g', '잡곡 50%'],
+      ['물', '150~170ml', '3배죽'],
+      ['소고기', '20g', '5mm로 썰어서'],
+      ['채소', '3종 각 10g', '5mm로'],
+      ['카놀라유', '7~8cc', '하루 기준'],
+      ['한 끼 양', '120g', '1일 3회']
+    ],
+    yieldNote: '약 300g이 나와요. 한 끼씩 나눠 얼려요.',
+    steps: [
+      '3배죽을 끓여요. 밥알이 확실히 남게 해요.',
+      '고기·채소를 5mm로 썰어 각각 익혀요.',
+      '그릇에 죽을 담고 반찬처럼 따로 올려요.',
+      '40℃로 식힌 뒤 카놀라유를 넣어요.'
+    ],
+    keep: [
+      '한 끼씩 소분해 얼리고 1주 안에 먹여요.',
+      '74℃ 이상 데운 뒤 40℃로 식혀요.'
+    ],
+    oil: '후기에는 하루 10~15cc까지 늘려요. 한 끼에 3~5cc씩 나눠 데운 뒤 넣어요.',
+    feed: [
+      '1일 3회 + 간식 2회예요.',
+      '수유량은 500~700cc로 줄어들어요.',
+      '물은 하루 120~240ml, 컵으로 조금씩 줘요.'
+    ],
+    watch: [
+      '고기는 매일 20~30g으로 늘려요.',
+      '치아 개수와 상관없이 5mm 잇몸 으깨기 질감을 유지해요.'
+    ],
+    caution: [
+      '꿀·생우유는 돌 전까지 금지예요.',
+      '소금 간은 두 돌까지 하지 않아요.'
+    ]
+  },
+  {
+    from: 121, to: 150, stage: '후기',
+    name: '3~2배죽 · 5~7mm',
+    texture: '3~2배죽 · 5~7mm 썰기. 숟가락으로 뜨면 살짝 뭉치는 진밥 단계예요.',
+    amounts: [
+      ['불린 쌀', '50g', '잡곡 50%'],
+      ['물', '130~150ml', '2~3배죽'],
+      ['소고기', '25g', '5~7mm로 썰어서'],
+      ['채소', '3종 각 10~15g', '5~7mm로'],
+      ['카놀라유', '10cc', '하루 기준'],
+      ['한 끼 양', '120~140g', '1일 3회']
+    ],
+    yieldNote: '약 320g이 나와요.',
+    steps: [
+      '쌀+물로 2~3배죽을 끓여요.',
+      '고기·채소를 5~7mm로 썰어 익혀요.',
+      '밥과 반찬을 나눠 담고 숟가락 연습을 해요.',
+      '데운 뒤 카놀라유를 넣어요.'
+    ],
+    keep: [
+      '한 끼씩 소분해 얼려요.',
+      '74℃ 이상 데운 뒤 40℃로 식혀요.'
+    ],
+    oil: '하루 10~15cc 기준이에요. 한 끼에 3~5cc씩 데운 뒤 넣어요.',
+    feed: [
+      '1일 3회 + 간식 2회예요.',
+      '수유량은 500~700cc예요.',
+      '빨대컵으로 물 마시기를 연습해요.'
+    ],
+    watch: [
+      '10개월까지는 덩어리·단단한 음식을 꼭 시작해요. 늦으면 씹고 삼키는 데 문제가 생길 수 있어요.',
+      '숟가락을 쥐여주고 스스로 먹게 해요.'
+    ],
+    caution: [
+      '돌아다니며 떠먹이지 말고 하이체어에 앉혀서 먹여요.',
+      '질식 위험 음식은 계속 피해요.'
+    ]
+  },
+  {
+    from: 151, to: 180, stage: '후기',
+    name: '진밥 · 밥과 반찬 분리',
+    texture: '2배죽 진밥 · 5~7mm. 어른 밥보다 무르고 촉촉한 상태예요.',
+    amounts: [
+      ['불린 쌀', '50~60g', '잡곡 50%'],
+      ['물', '100~120ml', '2배'],
+      ['소고기', '25~30g', '5~7mm로'],
+      ['채소', '3종 각 15g', '5~7mm로'],
+      ['카놀라유', '10~15cc', '하루 기준'],
+      ['한 끼 양', '120~150g', '1일 3회']
+    ],
+    yieldNote: '약 350g이 나와요.',
+    steps: [
+      '쌀+물로 진밥을 지어요.',
+      '고기·채소 반찬을 따로 만들어요.',
+      '밥과 반찬을 분리해 담고 아이가 골라 먹게 해요.',
+      '데운 뒤 카놀라유를 넣어요.'
+    ],
+    keep: [
+      '밥은 한 끼씩 소분해 얼려요. 해동 뒤에는 바로 먹여요.',
+      '74℃ 이상 데운 뒤 40℃로 식혀요.'
+    ],
+    oil: '하루 10~15cc 기준이에요.',
+    feed: [
+      '1일 3회 + 간식 2회예요.',
+      '수유량은 500~700cc예요.'
+    ],
+    watch: [
+      '국물은 건더기 위주로 줘요. 국물만 먹으면 양이 모자라요.',
+      '양념은 하지 않아요. 단맛은 단호박·고구마·익은 과일로 내요.'
+    ],
+    caution: [
+      '꿀·생우유는 돌 전까지 금지예요.'
+    ]
+  },
+  {
+    from: 181, to: 270, stage: '완료기',
+    name: '완료기 · 어른 밥으로',
+    texture: '진밥 → 어른 밥 · 7~10mm. 유아식 반찬이 함께 가는 단계예요.',
+    amounts: [
+      ['밥', '90~100g', '반 공기 정도 · 잡곡 70~80% 가능'],
+      ['소고기·생선·계란', '30~40g', '매일 고기 30~40g'],
+      ['채소', '3종', '7~10mm로'],
+      ['과일', '1회', '간식으로'],
+      ['카놀라유', '10~15cc', '하루 기준'],
+      ['한 끼 양', '120~180g', '1일 3회']
+    ],
+    yieldNote: '어른 식사 시간에 맞춰 3회 먹여요.',
+    steps: [
+      '밥은 무르게 짓고 반찬은 7~10mm로 썰어요.',
+      '국은 건더기 위주로 건져서 줘요.',
+      '간은 하지 않아요. 필요하면 아주 약하게만요.',
+      '식탁에 앉아 함께 먹는 습관을 들여요.'
+    ],
+    keep: [
+      '남은 반찬은 냉장 24시간 안에 먹여요.',
+      '데울 때는 74℃ 이상으로 충분히 데워요.'
+    ],
+    oil: '하루 10~15cc를 기준으로 해요. 기름진 반찬이 있으면 조금 줄여요.',
+    feed: [
+      '1일 3회 + 간식 2회예요.',
+      '생우유는 돌 이후부터 하루 400~500ml까지 줘요.',
+      '물은 하루 240~950ml예요. 우유가 물을 대신하지 않아요.'
+    ],
+    watch: [
+      '생우유·꿀 전환이 가능한 시기예요. 꿀은 돌 이후부터 소량만 줘요.',
+      '체중이 잘 안 늘거나 묽은 변이 계속되면 잡곡을 줄이고 흰쌀 위주로 줘요.'
+    ],
+    caution: [
+      '김치·된장·간장처럼 짠 것은 두 돌까지 미뤄요.',
+      '돌아다니며 떠먹이지 말아요.'
+    ]
+  },
+  {
+    from: 271, to: 365, stage: '완료기',
+    name: '유아식 · 스스로 먹기',
+    texture: '어른 밥 · 10mm 이상. 유아식 반찬과 국이 함께 가요.',
+    amounts: [
+      ['밥', '100~120g', '잡곡 70~80%'],
+      ['단백질', '30~40g', '고기·생선·계란·두부'],
+      ['채소', '3종', '10mm 이상'],
+      ['과일', '1~2회', '간식'],
+      ['우유', '400~500ml', '하루'],
+      ['한 끼 양', '120~180g', '1일 3회']
+    ],
+    yieldNote: '가족 식사에 맞춰 양을 조절해요.',
+    steps: [
+      '가족 반찬에서 아이 몫을 덜어 내고 간은 따로 해요.',
+      '10mm 이상으로 썰어 스스로 먹게 해요.',
+      '국은 건더기 위주로 줘요.'
+    ],
+    keep: [
+      '남은 음식은 냉장 24시간 안에 먹여요.',
+      '데울 때는 74℃ 이상으로 충분히 데워요.'
+    ],
+    oil: '하루 10~15cc를 기준으로 해요.',
+    feed: [
+      '1일 3회 + 간식 2회예요.',
+      '생우유 하루 400~500ml, 물 240~950ml예요.'
+    ],
+    watch: [
+      '편식이 시작되는 시기예요. 새 음식은 여러 번 다시 권해요.',
+      '두 돌까지는 무염·저염을 유지해요.'
+    ],
+    caution: [
+      '통견과·팝콘·사탕·젤리·떡은 4세 전까지 질식 위험이 있어요.',
+      '식사는 20~30분 안에 끝내요.'
+    ]
+  }
+];
+
+const RECIPE_CHIPS = [
+  [1, 4, 8, 14],
+  [15, 22, 30],
+  [31, 46, 61, 76, 90],
+  [91, 121, 151, 180],
+  [181, 271, 365]
+];
+
+function recipeForDay(d) {
+  const day = Math.max(1, Math.min(365, d));
+  for (const r of RECIPES) {
+    if (day >= r.from && day <= r.to) return r;
+  }
+  return day < 1 ? RECIPES[0] : RECIPES[RECIPES.length - 1];
+}
+
+function recipeDayLabel(r) {
+  return r.from === r.to ? `${r.from}일차` : `${r.from}~${r.to}일차`;
+}
+
+/* ── 2. 알레르기 체크 저장 (localStorage 전용) ─────────────── */
+const LKEY_ALLERGY = 'iyusik_allergy_v1';
+const LKEY_START = 'iyusik_start_v1';
+let allergy = {};
+let allergyStorageOK = true;
+let selectedStatus = '전체';
+const openMetaSet = new Set();
+
+function loadAllergy() {
+  try {
+    const raw = localStorage.getItem(LKEY_ALLERGY);
+    const parsed = raw ? JSON.parse(raw) : {};
+    allergy = (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) ? parsed : {};
+  } catch (e) {
+    allergy = {};
+    allergyStorageOK = false;
+  }
+  Object.keys(allergy).forEach(k => {
+    const v = allergy[k];
+    if (!v || typeof v !== 'object' || ['pass', 'warn', 'none'].indexOf(v.s) < 0) delete allergy[k];
+  });
+}
+
+function saveAllergy() {
+  try {
+    localStorage.setItem(LKEY_ALLERGY, JSON.stringify(allergy));
+    allergyStorageOK = true;
+  } catch (e) {
+    allergyStorageOK = false;
+  }
+}
+
+function getStatus(name) {
+  const v = allergy[name];
+  return v && v.s ? v.s : 'none';
+}
+
+function getMeta(name) {
+  const v = allergy[name];
+  return v ? { d: v.d || '', m: v.m || '' } : { d: '', m: '' };
+}
+
+function setAllergyStatus(name, status, silent) {
+  const cur = allergy[name] || {};
+  const now = new Date();
+  const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  allergy[name] = {
+    s: status,
+    d: cur.d || (status === 'none' ? '' : today),
+    m: cur.m || ''
+  };
+  if (status === 'none') allergy[name].d = '';
+  saveAllergy();
+  if (!silent) {
+    renderFoods();
+    renderQuick();
+  }
+}
+
+function setAllergyMeta(name, field, value) {
+  const cur = allergy[name] || { s: 'none', d: '', m: '' };
+  cur[field] = value;
+  allergy[name] = cur;
+  saveAllergy();
+  const idx = foods.findIndex(f => f.name === name);
+  const el = idx >= 0 ? document.querySelector(`[data-metidx="${idx}"]`) : null;
+  if (el) el.textContent = metaText(name);
+  if (!el) renderFoods();
+}
+
+function metaText(name) {
+  const m = getMeta(name);
+  const parts = [];
+  if (m.d) parts.push(m.d);
+  if (m.m) parts.push(m.m);
+  return parts.join(' · ');
+}
+
+function statusCounts() {
+  let pass = 0, warn = 0, none = 0;
+  foods.forEach(f => {
+    const s = getStatus(f.name);
+    if (s === 'pass') pass++;
+    else if (s === 'warn') warn++;
+    else none++;
+  });
+  return { pass, warn, none, total: foods.length };
+}
+
+function renderProg() {
+  const c = statusCounts();
+  const done = c.pass + c.warn;
+  const pct = c.total ? Math.round((done / c.total) * 100) : 0;
+  const pctText = done > 0 && pct === 0 ? '1% 미만' : pct + '%';
+  const pctEl = document.getElementById('progPct');
+  const barEl = document.getElementById('progBar');
+  const lgEl = document.getElementById('progLegend');
+  if (!pctEl || !barEl || !lgEl) return;
+  pctEl.textContent = `체크 완료 ${done}종 / 전체 ${c.total}종 (${pctText})`;
+  const passPct = c.total ? (c.pass / c.total) * 100 : 0;
+  const warnPct = c.total ? (c.warn / c.total) * 100 : 0;
+  barEl.innerHTML = `<span class="p-pass" style="width:${passPct}%"></span><span class="p-warn" style="width:${warnPct}%"></span>`;
+  lgEl.innerHTML = `
+    <span class="lg"><i class="i-pass"></i>통과 ${c.pass}종</span>
+    <span class="lg"><i class="i-warn"></i>주의 ${c.warn}종</span>
+    <span class="lg"><i class="i-none"></i>미시도 ${c.none}종</span>`;
+}
+
+function setStatus(s, btn) {
+  selectedStatus = s;
+  document.querySelectorAll('#statusPills .pill').forEach(p => p.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  renderFoods();
+}
+
+function toggleMetaEdit(name) {
+  if (openMetaSet.has(name)) openMetaSet.delete(name);
+  else openMetaSet.add(name);
+  renderFoods();
+}
+
+/* 빠른 체크 (오늘 계산기 탭) */
+function buildQuickSelect() {
+  const sel = document.getElementById('quickFood');
+  if (!sel) return;
+  const opts = foods.map(f => `<option value="${f.name}">${f.name} · ${f.cat}</option>`).join('');
+  sel.innerHTML = opts;
+}
+
+function renderQuick() {
+  const sel = document.getElementById('quickFood');
+  const list = document.getElementById('recentList');
+  if (!list) return;
+  const entries = Object.keys(allergy)
+    .filter(n => foods.some(f => f.name === n))
+    .map(n => ({ name: n, s: getStatus(n), d: (allergy[n] && allergy[n].d) || '' }))
+    .filter(e => e.s !== 'none')
+    .sort((a, b) => (b.d || '').localeCompare(a.d || ''));
+  if (!entries.length) {
+    list.innerHTML = '<span style="font-size:11.5px; color:#64748b;">아직 체크한 재료가 없어요. 위에서 재료를 고르고 통과·주의를 눌러 보세요.</span>';
+  } else {
+    list.innerHTML = entries.slice(0, 10).map(e =>
+      `<button class="recent-chip ${e.s}" onclick="focusFood('${e.name.replace(/'/g, "\\'")}')" title="식재료 백과에서 보기">${e.s === 'pass' ? '✅' : '⚠️'} ${e.name}</button>`
+    ).join('');
+  }
+  if (sel && getStatus(sel.value)) {
+    // 선택된 재료의 현재 상태를 버튼에 표시
+  }
+}
+
+function quickSet(status) {
+  const sel = document.getElementById('quickFood');
+  if (!sel || !sel.value) return;
+  setAllergyStatus(sel.value, status, true);
+  renderQuick();
+  renderProg();
+  toast(`${sel.value} · ${status === 'pass' ? '통과 ✅' : '주의 ⚠️'} 로 저장했어요`);
+}
+
+function focusFood(name) {
+  switchTab('food', document.querySelectorAll('.tab-btn')[2]);
+  const search = document.getElementById('foodSearch');
+  if (search) search.value = name;
+  selectedCat = '전체';
+  const catBtns = document.querySelectorAll('#catPills .pill');
+  catBtns.forEach((b, i) => b.classList.toggle('active', i === 0));
+  selectedStatus = '전체';
+  document.querySelectorAll('#statusPills .pill').forEach((b, i) => b.classList.toggle('active', i === 0));
+  renderFoods();
+  const idx = foods.findIndex(f => f.name === name);
+  const el = idx >= 0 ? document.getElementById('food-' + idx) : null;
+  if (el) setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 60);
+}
+
+/* 내보내기 / 불러오기 / 초기화 */
+function exportAllergy() {
+  const now = new Date();
+  const stamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+  const data = { app: 'iyusik-calculator', version: 1, exportedAt: now.toISOString(), startDate: getSavedStart(), items: allergy };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `이유식_알레르기_기록_${stamp}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+  toast('기록을 JSON 파일로 내려받았어요');
+}
+
+function importAllergy(input) {
+  const file = input.files && input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const data = JSON.parse(String(reader.result));
+      const items = data && data.items ? data.items : data;
+      if (!items || typeof items !== 'object' || Array.isArray(items)) throw new Error('형식 오류');
+      if (!confirm('불러온 기록으로 지금 기기의 기록을 덮어쓸까요?')) { input.value = ''; return; }
+      allergy = {};
+      Object.keys(items).forEach(k => {
+        const v = items[k];
+        if (v && typeof v === 'object' && ['pass', 'warn', 'none'].indexOf(v.s) >= 0) {
+          allergy[k] = { s: v.s, d: v.d || '', m: v.m || '' };
+        }
+      });
+      saveAllergy();
+      renderFoods();
+      renderQuick();
+      toast('기록을 불러왔어요');
+    } catch (e) {
+      toast('불러오지 못했어요. 내보낸 JSON 파일인지 확인해 주세요.');
+    }
+    input.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function resetAllergy() {
+  if (!confirm('알레르기 체크 기록을 모두 지울까요? 되돌릴 수 없어요.')) return;
+  allergy = {};
+  saveAllergy();
+  renderFoods();
+  renderQuick();
+  toast('기록을 모두 지웠어요');
+}
+
+/* 시작일 저장 */
+function getSavedStart() {
+  try { return localStorage.getItem(LKEY_START) || ''; } catch (e) { return ''; }
+}
+
+function saveStart(val) {
+  try { localStorage.setItem(LKEY_START, val); } catch (e) {}
+}
+
+function initStartDate() {
+  const el = document.getElementById('startDate');
+  if (!el) return;
+  const saved = getSavedStart();
+  if (!saved || !/^\d{4}-\d{2}-\d{2}$/.test(saved)) return;
+  const probe = new Date(saved + 'T00:00:00');
+  if (isNaN(probe.getTime())) return;
+  el.value = saved;
+  calcFromStartDate();
+}
+
+/* ── 3. 상세 조리법 모달 ───────────────────────────────────── */
+let openRecipeDay = null;
+
+function currentDay() {
+  const el = document.getElementById('dayInput');
+  return Math.max(1, Math.min(365, parseInt((el && el.value) || '1', 10) || 1));
+}
+
+function recipeHTML(r, day) {
+  const amtRows = r.amounts.map(a =>
+    `<tr><td>${a[0]}</td><td>${a[1]}</td><td>${a[2] || ''}</td></tr>`).join('');
+  const steps = r.steps.map(s => `<li>${s}</li>`).join('');
+  const keeps = r.keep.map(s => `<li>${s}</li>`).join('');
+  const feeds = r.feed.map(s => `<li>${s}</li>`).join('');
+  const watches = r.watch.map(s => `<li>${s}</li>`).join('');
+  const cautions = r.caution.map(s => `<li>${s}</li>`).join('');
+  return `
+    <div class="recipe-sec">
+      <h4>🥣 질감 · 입자 크기</h4>
+      <p class="lead">${r.texture}</p>
+    </div>
+    <div class="recipe-sec">
+      <h4>⚖️ 재료 계량 (한 번에 만드는 양)</h4>
+      <table class="amt-table">${amtRows}</table>
+      ${r.yieldNote ? `<p style="margin:8px 0 0; font-size:11.5px; color:#64748b; font-weight:600;">${r.yieldNote}</p>` : ''}
+    </div>
+    <div class="recipe-sec">
+      <h4>👩‍🍳 조리 순서</h4>
+      <ol>${steps}</ol>
+    </div>
+    <div class="recipe-sec">
+      <h4>🧊 소분 · 냉동 · 해동 · 재가열</h4>
+      <ul>${keeps}</ul>
+    </div>
+    <div class="recipe-sec oil">
+      <h4>🫗 카놀라유 넣는 타이밍</h4>
+      <p class="lead">${r.oil}</p>
+    </div>
+    <div class="recipe-sec">
+      <h4>🍼 수유 · 하루 횟수</h4>
+      <ul>${feeds}</ul>
+    </div>
+    <div class="recipe-sec watch">
+      <h4>👀 새 재료 관찰 포인트</h4>
+      <ul>${watches}</ul>
+    </div>
+    <div class="recipe-sec caution">
+      <h4>⚠️ 주의</h4>
+      <ul>${cautions}</ul>
+    </div>
+    <p class="src" style="margin:2px 0 0;">
+      출처 · 삐뽀삐뽀 119 이유식(2023 전면개정판) · 질병관리청 국가건강정보포털 「이유기보충식(이유식)」(2026-05-12 개정). 양과 질감은 아이의 발달과 식성에 맞춰 조절해 주세요.
+    </p>`;
+}
+
+function openRecipe(day) {
+  const d = Math.max(1, Math.min(365, parseInt(day, 10) || 1));
+  openRecipeDay = d;
+  const r = recipeForDay(d);
+  const modal = document.getElementById('recipeModal');
+  if (!modal) return;
+  document.getElementById('mTag').textContent = `${r.stage} · ${recipeDayLabel(r)}`;
+  document.getElementById('mTitle').textContent = r.name;
+  document.getElementById('mSub').textContent = `지금 보는 일차: ${d}일차 · ${r.stage}`;
+  document.getElementById('mBody').innerHTML = recipeHTML(r, d);
+  modal.classList.remove('hidden');
+  document.getElementById('mBody').scrollTop = 0;
+  requestAnimationFrame(() => modal.classList.add('show'));
+  document.body.style.overflow = 'hidden';
+}
+
+function closeRecipe() {
+  const modal = document.getElementById('recipeModal');
+  if (!modal) return;
+  modal.classList.remove('show');
+  document.body.style.overflow = '';
+  setTimeout(() => modal.classList.add('hidden'), 180);
+}
+
+function recipePlainText() {
+  const d = openRecipeDay || currentDay();
+  const r = recipeForDay(d);
+  const lines = [];
+  lines.push(`[${r.stage} · ${recipeDayLabel(r)}] ${r.name}`);
+  lines.push('');
+  lines.push('■ 질감 · 입자');
+  lines.push(r.texture);
+  lines.push('');
+  lines.push('■ 재료 계량');
+  r.amounts.forEach(a => lines.push(`- ${a[0]}: ${a[1]}${a[2] ? ' (' + a[2] + ')' : ''}`));
+  if (r.yieldNote) lines.push(`※ ${r.yieldNote}`);
+  lines.push('');
+  lines.push('■ 조리 순서');
+  r.steps.forEach((s, i) => lines.push(`${i + 1}. ${s}`));
+  lines.push('');
+  lines.push('■ 소분 · 냉동 · 해동 · 재가열');
+  r.keep.forEach(s => lines.push(`- ${s}`));
+  lines.push('');
+  lines.push('■ 카놀라유');
+  lines.push(r.oil);
+  lines.push('');
+  lines.push('■ 수유 · 하루 횟수');
+  r.feed.forEach(s => lines.push(`- ${s}`));
+  lines.push('');
+  lines.push('■ 새 재료 관찰 포인트');
+  r.watch.forEach(s => lines.push(`- ${s}`));
+  lines.push('');
+  lines.push('■ 주의');
+  r.caution.forEach(s => lines.push(`- ${s}`));
+  return lines.join('\n');
+}
+
+function copyRecipe() {
+  copyText(recipePlainText(), '상세 조리법을 복사했어요 ✅');
+}
+
+function copyFood(idx) {
+  const f = foods[idx];
+  if (!f) return;
+  copyText(`${f.name} (${f.when})\n${f.desc}`, `${f.name} 설명을 복사했어요 ✅`);
+}
+
+function copyToday() {
+  const g = id => (document.getElementById(id) || {}).textContent || '';
+  const txt = [
+    `[${g('stageTitle')}]`,
+    `· 한 끼 권장량: ${g('outAmount')} (${g('outAmountSub')})`,
+    `· 하루 횟수: ${g('outFreq')} (${g('outFreqSub')})`,
+    `· 하루 수유량: ${g('outMilk')}`,
+    `· 고기 권장량: ${g('outMeat')}`,
+    `· 묽기·입자: ${g('outTexture')}`,
+    `· 오일: ${g('outOil')}`,
+    '',
+    '지금 챙길 주의사항',
+    ...Array.from(document.querySelectorAll('#outCautions li')).map(li => `- ${li.textContent}`)
+  ].join('\n');
+  copyText(txt, '오늘 계산 결과를 복사했어요 ✅');
+}
+
+function copyEl(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  copyText(el.innerText.replace(/\n{2,}/g, '\n').trim(), '복사했어요 ✅');
+}
+
+function copyStage(i) {
+  const el = document.querySelectorAll('#tab-stage .stage-card')[i];
+  if (!el) return;
+  copyText(el.innerText.replace(/\n{2,}/g, '\n').trim(), '시기별 요약을 복사했어요 ✅');
+}
+
+async function copyText(text, msg) {
+  let ok = false;
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(text);
+      ok = true;
+    }
+  } catch (e) { ok = false; }
+  if (!ok) {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.top = '-1000px';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      ta.setSelectionRange(0, ta.value.length);
+      ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+    } catch (e) { ok = false; }
+  }
+  toast(ok ? (msg || '복사했어요 ✅') : '복사가 막혔어요. 글자를 길게 눌러 선택해 주세요.');
+}
+
+let toastTimer = null;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  if (!el) return;
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    const modal = document.getElementById('recipeModal');
+    if (modal && !modal.classList.contains('hidden')) closeRecipe();
+  }
+});
+
+/* ── 4. 식재료 백과 렌더 (알레르기 체크 포함) ───────────────── */
+function renderFoods() {
+  const q = (document.getElementById('foodSearch').value || '').trim().toLowerCase();
+  const filtered = foods.filter(f => {
+    const catOk = selectedCat === '전체' || f.cat === selectedCat;
+    const qOk = !q || f.name.toLowerCase().includes(q) || f.desc.toLowerCase().includes(q) || f.when.toLowerCase().includes(q);
+    const s = getStatus(f.name);
+    const stOk = selectedStatus === '전체'
+      || (selectedStatus === 'pass' && s === 'pass')
+      || (selectedStatus === 'warn' && s === 'warn')
+      || (selectedStatus === 'none' && s === 'none');
+    return catOk && qOk && stOk;
+  });
+  const countEl = document.getElementById('foodCount');
+  if (countEl) {
+    const extra = selectedStatus === '전체' ? '' : ` · 알레르기 「${selectedStatus === 'pass' ? '통과만' : selectedStatus === 'warn' ? '주의만' : '미시도만'}」`;
+    countEl.textContent = `총 ${filtered.length}가지 식재료 (전체 ${foods.length}종${extra})`;
+  }
+  const totalEl = document.getElementById('foodTotal');
+  if (totalEl) totalEl.textContent = foods.length;
+
+  document.getElementById('foodList').innerHTML = filtered.map(f => {
+    const idx = foods.indexOf(f);
+    const s = getStatus(f.name);
+    const meta = metaText(f.name);
+    const editing = openMetaSet.has(f.name);
+    const metaLine = meta || editing
+      ? `<span class="food-meta" data-metidx="${idx}">${meta}</span>` : '<span class="food-meta" data-metidx="' + idx + '"></span>';
+    const editRow = editing ? `
+      <div class="food-meta-edit">
+        <input type="date" value="${getMeta(f.name).d}" onchange="setAllergyMeta('${f.name.replace(/'/g, "\\'")}', 'd', this.value)" aria-label="테스트 날짜" />
+        <input type="text" maxlength="40" placeholder="한줄 메모 (예: 발진 없음)" value="${(getMeta(f.name).m || '').replace(/"/g, '&quot;')}" onchange="setAllergyMeta('${f.name.replace(/'/g, "\\'")}', 'm', this.value)" aria-label="메모" />
+      </div>` : '';
+    return `
+    <div class="food-item" id="food-${idx}">
+      <div class="food-top">
+        <span class="food-name">${f.name}</span>
+        <span class="badge-when ${f.cls}">${f.when}</span>
+      </div>
+      <div class="food-desc">${f.desc}</div>
+      <div class="food-allergy">
+        <button class="status-btn ${s === 'none' ? 'on-none' : ''}" onclick="setAllergyStatus('${f.name.replace(/'/g, "\\'")}','none')">미시도</button>
+        <button class="status-btn ${s === 'pass' ? 'on-pass' : ''}" onclick="setAllergyStatus('${f.name.replace(/'/g, "\\'")}','pass')">✅ 통과</button>
+        <button class="status-btn ${s === 'warn' ? 'on-warn' : ''}" onclick="setAllergyStatus('${f.name.replace(/'/g, "\\'")}','warn')">⚠️ 주의</button>
+        <button class="copy-btn" onclick="toggleMetaEdit('${f.name.replace(/'/g, "\\'")}')">${editing ? '닫기' : '＋ 날짜·메모'}</button>
+        <button class="copy-btn" onclick="copyFood(${idx})">복사</button>
+        ${metaLine}
+        ${editRow}
+      </div>
+    </div>`;
+  }).join('') || '<p style="font-size:13px; color:#64748b;">조건에 맞는 식재료가 없어요. 다른 이름으로 검색하거나 필터를 풀어 보세요.</p>';
+
+  renderProg();
+}
+
+
 function switchTab(id, btn) {
   ['calc', 'ratio', 'food', 'stage', 'guide'].forEach(t => {
     document.getElementById('tab-' + t).classList.add('hidden');
@@ -1088,16 +2632,22 @@ function switchTab(id, btn) {
   document.getElementById('tab-' + id).classList.remove('hidden');
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+  if (id === 'food') {
+    renderFoods();
+    renderQuick();
+  }
 }
 
 function calcFromStartDate() {
   const val = document.getElementById('startDate').value;
   if (!val) return;
   const start = new Date(val + 'T00:00:00');
+  if (isNaN(start.getTime())) return;
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
   const diff = Math.floor((today - start) / (1000 * 60 * 60 * 24)) + 1;
   const d = Math.max(1, Math.min(365, diff));
+  saveStart(val);
   document.getElementById('dayInput').value = d;
   document.getElementById('dayRange').value = Math.min(200, d);
   render();
@@ -1126,7 +2676,9 @@ function setMonth(m, btn) {
 }
 
 function render() {
-  const d = Math.max(1, parseInt(document.getElementById('dayInput').value || '1', 10));
+  const rawDay = parseInt(document.getElementById('dayInput').value || '1', 10);
+  const d = Number.isFinite(rawDay) ? Math.max(1, Math.min(365, rawDay)) : 1;
+  if (!Number.isFinite(rawDay)) document.getElementById('dayInput').value = 1;
   document.getElementById('dayRange').value = Math.min(200, d);
 
   let tag, title, amt, amtSub, freq, freqSub, milk, meat, tex, oil, cautions;
@@ -1232,6 +2784,9 @@ function render() {
   document.getElementById('outTexture').textContent = tex;
   document.getElementById('outOil').textContent = oil;
   document.getElementById('outCautions').innerHTML = cautions.map(c => `<li>${c}</li>`).join('');
+
+  const recipeLbl = document.getElementById('recipeOpenLabel');
+  if (recipeLbl) recipeLbl.textContent = `${d}일차 상세 조리법`;
 }
 
 function calcRatio() {
@@ -1278,31 +2833,15 @@ function setCat(cat, btn) {
   renderFoods();
 }
 
-function renderFoods() {
-  const q = (document.getElementById('foodSearch').value || '').trim().toLowerCase();
-  const filtered = foods.filter(f => {
-    const catOk = selectedCat === '전체' || f.cat === selectedCat;
-    const qOk = !q || f.name.toLowerCase().includes(q) || f.desc.toLowerCase().includes(q) || f.when.toLowerCase().includes(q);
-    return catOk && qOk;
-  });
-  document.getElementById('foodCount').textContent = `총 ${filtered.length}가지 식재료 (전체 ${foods.length}종)`;
-  const totalEl = document.getElementById('foodTotal');
-  if (totalEl) totalEl.textContent = foods.length;
-  document.getElementById('foodList').innerHTML = filtered.map(f => `
-    <div class="food-item">
-      <div class="food-top">
-        <span class="food-name">${f.name}</span>
-        <span class="badge-when ${f.cls}">${f.when}</span>
-      </div>
-      <div class="food-desc">${f.desc}</div>
-    </div>
-  `).join('') || '<p style="font-size:13px; color:#64748b;">검색 결과가 없어요. 다른 이름으로 검색해 보세요!</p>';
-}
-
 render();
 calcRatio();
 calcReverse();
+loadAllergy();
+buildQuickSelect();
+initStartDate();
 renderFoods();
+renderQuick();
+renderProg();
 </script>
 </body>
 </html>
