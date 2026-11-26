@@ -2251,7 +2251,7 @@ function renderFoodHint(){
   hits.forEach(function(h){
     html += '<span class="hint-line">' + (h.level === "danger" ? "⛔ " : h.level === "warn" ? "⚠️ " : "🥚 ") + esc(h.text) + '</span>';
   });
-  html += '<span class="hint-line" style="opacity:.8">3일 동안 소량씩, 오전에 시도하고 변·발진을 봐요.</span>';
+  html += '<span class="hint-line" style="opacity:.8">' + (level === "danger" ? "지금 단계에서는 주지 않는 재료예요." : "3일 동안 소량씩, 오전에 시도하고 변·발진을 봐요.") + '</span>';
   box.innerHTML = html;
 }
 
@@ -2398,7 +2398,7 @@ function renderFridge(){
   list.forEach(function(it){
     var d = ddayOf(it), st = storageInfo(it), rm = remainInfo(it);
     html += '<div class="list-item"><div class="body">';
-    html += '<div class="ttl">' + esc(it.name) + (function(){
+    html += '<div class="ttl">' + esc(it.name) + (it.qty === 0 ? ' <span class="pill gray">다 씀</span>' : '') + (function(){
       var st2 = itemStatus(it);
       return st2 ? ' <span class="pill ' + (STATUS_PILL[st2] || "gray") + '">' + esc(st2) + '</span>' : '';
     })() + '</div>';
@@ -2519,6 +2519,9 @@ function renderRecipe(){
   var html = '<div class="recipe">';
   html += '<h3>' + esc(r.name) + '</h3>';
   html += '<p class="stage">' + esc(r.stage) + ' · ' + day + '일차 · ' + (day === cur ? "오늘 기준" : "미리 보기") + '</p>';
+  if(day === cur){
+    html += '<p class="note mint" style="margin:10px 0 0">계산기 기본값이에요. 주원이는 <b>초기 2단계 · 하루 1회 50~70g</b>, 새 재료는 3일 간격으로 진행 중이니 이 기준을 우선해요.</p>';
+  }
   html += '<div class="recipe-block"><h4>질감</h4><p>' + esc(r.texture) + '</p></div>';
 
   if(r.amounts && r.amounts.length){
