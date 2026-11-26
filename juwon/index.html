@@ -2342,18 +2342,24 @@ function remainInfo(it){
   if(d === 0) return { k: "today", text: "오늘까지 (D-DAY)" };
   return { k: d <= 2 ? "soon" : "ok", text: d + "일 남음 (D-" + d + ")" };
 }
-/* 냉장고 카드에 붙는 알레르기 상태 — 271종에 있는 재료만 */
+/* 냉장고 카드에 붙는 알레르기 상태 — 같은 이름의 기록 또는 백과와 정확히 맞을 때만 */
 function itemStatus(it){
-  var ms = allergyMatches(it.name);
-  if(ms.length){
-    var best = ms[0];
-    ms.forEach(function(a){
+  var nm = (it.name || "").replace(/\s/g, "");
+  if(!nm) return null;
+  var exact = data.allergy.filter(function(a){
+    return a.kind !== "제품" && (a.name || "").replace(/\s/g, "") === nm;
+  });
+  if(exact.length){
+    var best = exact[0];
+    exact.forEach(function(a){
       if((STATUS_ORDER[a.status] == null ? 9 : STATUS_ORDER[a.status]) < (STATUS_ORDER[best.status] == null ? 9 : STATUS_ORDER[best.status])) best = a;
     });
     return best.status;
   }
-  if(findFoodEntry(it.name)) return "미시도";
-  return null;
+  var inDb = foods.some(function(f){
+    return f.name === it.name || (f.name.length >= 2 && nm.indexOf(f.name.replace(/\s/g, "")) === 0);
+  });
+  return inDb ? "미시도" : null;
 }
 function renderFridge(){
   var c = { today: 0, soon: 0, expired: 0, none: 0 };
