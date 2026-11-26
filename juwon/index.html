@@ -1569,11 +1569,15 @@ var SEED_ALLERGY = [
 ];
 
 var SEED_ITEMS = [
-  { name: "푸드케어 클레 고구마치즈퓨레", loc: "냉동", made: "", exp: "2026-12-10", qty: 1, unit: "개", memo: "침 닿기 전 소분 냉동 시 ~12/10 · 개봉 냉장 시 3일" },
-  { name: "당근 큐브", loc: "냉동", made: "", exp: "", qty: null, unit: "개", memo: "냉동 14일 기준으로 기한을 넣어 주세요" },
-  { name: "소고기 미음 큐브", loc: "냉동", made: "", exp: "", qty: null, unit: "개", memo: "핏물 빼지 않고 조리 · 냉동 1주 안에" },
-  { name: "퓨어잇 아기 쌀떡뻥", loc: "실온", made: "", exp: "", qty: null, unit: "봉", memo: "무염·무당" },
-  { name: "에코 정제 카놀라유 500ml", loc: "실온", made: "", exp: "", qty: null, unit: "병", memo: "냉압착 정제 · 데운 이유식에 먹기 직전 2.5cc" }
+  { name: "시금치", loc: "냉장", made: "2026-11-26", exp: "2026-11-30", qty: null, unit: "단", memo: "미시도 · 잎 위주로 데쳐 물기 짜고, 큐브 냉동하면 14일" },
+  { name: "단호박", loc: "냉장", made: "2026-11-26", exp: "2026-12-01", qty: null, unit: "개", memo: "통과 완료 · 씨 제거하고 쪄서 큐브 냉동하면 14일" },
+  { name: "애호박", loc: "냉장", made: "2026-11-26", exp: "2026-12-03", qty: null, unit: "개", memo: "통과 완료 · 껍질·씨 제거 후 큐브 냉동하면 14일" },
+  { name: "무", loc: "냉장", made: "2026-11-26", exp: "2026-12-06", qty: null, unit: "개", memo: "미시도 · 껍질 벗겨 푹 익혀 큐브 냉동하면 14일" },
+  { name: "당근", loc: "냉장", made: "2026-11-26", exp: "2026-12-06", qty: null, unit: "개", memo: "미시도 · 껍질 벗겨 15분 이상 푹 익혀 체에 거르기" },
+  { name: "감자", loc: "실온", made: "2026-11-26", exp: "2026-12-10", qty: null, unit: "개", memo: "통과 완료 · 싹·푸른 부분 제거, 냉동하면 식감이 변해 만든 뒤 냉장 2일 안에 소진" },
+  { name: "푸드케어 클레 고구마치즈퓨레", loc: "냉동", made: "", exp: "2026-12-10", qty: 1, unit: "개", memo: "침 닿기 전 소분 냉동 시 ~12/10 · 개봉 냉장 시 3일 내" },
+  { name: "퓨어잇 아기 쌀떡뻥", loc: "실온", made: "", exp: "", qty: null, unit: "봉", memo: "실온 간식 · 무염·무당" },
+  { name: "에코 유기농 냉압착 정제 카놀라유 500ml", loc: "실온", made: "", exp: "", qty: null, unit: "병", memo: "데운 이유식에 먹이기 직전 2.5cc(1~2방울)" }
 ];
 
 var STATUS_ORDER = { "이상반응": 0, "주의": 1, "테스트중": 2, "미시도": 3, "통과": 4 };
@@ -2338,6 +2342,19 @@ function remainInfo(it){
   if(d === 0) return { k: "today", text: "오늘까지 (D-DAY)" };
   return { k: d <= 2 ? "soon" : "ok", text: d + "일 남음 (D-" + d + ")" };
 }
+/* 냉장고 카드에 붙는 알레르기 상태 — 271종에 있는 재료만 */
+function itemStatus(it){
+  var ms = allergyMatches(it.name);
+  if(ms.length){
+    var best = ms[0];
+    ms.forEach(function(a){
+      if((STATUS_ORDER[a.status] == null ? 9 : STATUS_ORDER[a.status]) < (STATUS_ORDER[best.status] == null ? 9 : STATUS_ORDER[best.status])) best = a;
+    });
+    return best.status;
+  }
+  if(findFoodEntry(it.name)) return "미시도";
+  return null;
+}
 function renderFridge(){
   var c = { today: 0, soon: 0, expired: 0, none: 0 };
   data.items.forEach(function(it){ c[ddayOf(it).k] = (c[ddayOf(it).k] || 0) + 1; });
@@ -2375,7 +2392,10 @@ function renderFridge(){
   list.forEach(function(it){
     var d = ddayOf(it), st = storageInfo(it), rm = remainInfo(it);
     html += '<div class="list-item"><div class="body">';
-    html += '<div class="ttl">' + esc(it.name) + '</div>';
+    html += '<div class="ttl">' + esc(it.name) + (function(){
+      var st2 = itemStatus(it);
+      return st2 ? ' <span class="pill ' + (STATUS_PILL[st2] || "gray") + '">' + esc(st2) + '</span>' : '';
+    })() + '</div>';
     html += '<div class="day-badges"><span>' + esc(st.text) + '</span>';
     html += '<span class="left-' + rm.k + '">' + esc(rm.text) + '</span></div>';
     html += '<div class="meta">' + esc(it.loc);
