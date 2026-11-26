@@ -1539,40 +1539,37 @@ var PIN_LEN = 4;
 
 var SEED_SETTINGS = { birth: "2026-05-11", start: "2026-10-29" };
 
-/* 색깔 순서 식단표 — 흰색 → 초록 → 주황 */
+/* 색깔 순서 식단표 — 실제 진행 기준 (통과 이력과 맞춤) */
 var SCHEDULE = [
   { from: "2026-11-13", to: "2026-11-13", name: "단호박", color: "노랑", note: "기존 메뉴(소고기 단호박 미음)", done: true },
   { from: "2026-11-14", to: "2026-11-16", name: "양배추", color: "흰색", note: "겉잎·심지 빼고 안쪽 연한 잎", done: true },
   { from: "2026-11-17", to: "2026-11-19", name: "콜리플라워", color: "흰색", note: "꽃송이만, 담백·고소", done: true },
-  { from: "2026-11-20", to: "2026-11-22", name: "브로콜리", color: "초록", note: "꽃봉오리만 5분 쪄서", done: true },
   { from: "2026-11-23", to: "2026-11-25", name: "오이", color: "초록", note: "껍질·씨 제거한 속살", done: true },
-  { from: "2026-11-26", to: "2026-11-28", name: "당근", color: "주황", note: "푹 익혀서, 카놀라유와 함께", done: false },
-  { from: "2026-11-29", to: "2026-12-01", name: "달걀노른자", color: "노랑", note: "완숙 노른자 반 티스푼부터 (예정)", done: false, planned: true }
+  { from: "2026-11-26", to: "2026-11-28", name: "달걀노른자", color: "노랑", note: "12분 완숙 노른자 반 티스푼부터 · 흰자는 노른자 통과 후", done: false }
 ];
 
 var SEED_ALLERGY = [
   { name: "쌀", kind: "식재료", status: "통과", memo: "초기 적응 완료" },
   { name: "오트밀", kind: "식재료", status: "통과", memo: "초기 적응 완료" },
-  { name: "소고기", kind: "식재료", status: "통과", memo: "핏물 빼지 않고 조리" },
-  { name: "시금치", kind: "식재료", status: "통과", memo: "30초 데쳐 물기 짜서" },
-  { name: "청경채", kind: "식재료", status: "통과", memo: "" },
-  { name: "애호박", kind: "식재료", status: "통과", memo: "껍질·씨 제거" },
+  { name: "사과", kind: "식재료", status: "통과", memo: "익혀서 으깨서" },
+  { name: "치즈", kind: "식재료", status: "통과", memo: "유제품 · 통과" },
   { name: "감자", kind: "식재료", status: "통과", memo: "" },
   { name: "고구마", kind: "식재료", status: "통과", memo: "" },
-  { name: "단호박", kind: "식재료", status: "통과", memo: "11/13 기존 메뉴" },
-  { name: "버섯", kind: "식재료", status: "통과", memo: "" },
-  { name: "양배추", kind: "식재료", status: "통과", start: "2026-11-14", end: "2026-11-16", memo: "안쪽 연한 잎" },
+  { name: "소고기", kind: "식재료", status: "통과", memo: "핏물 빼지 않고 조리" },
   { name: "콜리플라워", kind: "식재료", status: "통과", start: "2026-11-17", end: "2026-11-19", memo: "꽃송이 위주" },
-  { name: "브로콜리", kind: "식재료", status: "통과", start: "2026-11-20", end: "2026-11-22", memo: "꽃봉오리 위주" },
+  { name: "양배추", kind: "식재료", status: "통과", start: "2026-11-14", end: "2026-11-16", memo: "안쪽 연한 잎" },
   { name: "오이", kind: "식재료", status: "통과", start: "2026-11-23", end: "2026-11-25", memo: "껍질·씨 제거" },
-  { name: "당근", kind: "식재료", status: "테스트중", start: "2026-11-26", end: "2026-11-28", memo: "1~3일차 · 입 주변·변 관찰" },
+  { name: "단호박", kind: "식재료", status: "통과", start: "2026-11-13", end: "2026-11-13", memo: "11/13 기존 메뉴" },
+  { name: "청경채", kind: "식재료", status: "통과", memo: "잎·연한 줄기만 데쳐서" },
+  { name: "달걀(노른자)", kind: "식재료", status: "테스트중", memo: "노른자 테스트 중, 흰자는 아직 미시도" },
+  { name: "달걀(흰자)", kind: "식재료", status: "미시도", memo: "노른자 통과 후 시도 예정" },
   { name: "퓨어잇 아기 쌀떡뻥", kind: "제품", brand: "퓨어잇 · 무염·무당", status: "미시도", memo: "첫 시도는 소량부터, 물과 함께" },
-  { name: "푸드케어 클레 고구마치즈퓨레", kind: "제품", brand: "푸드케어 클레", status: "주의", memo: "유제품 포함 · 오전 소량 주의" }
+  { name: "푸드케어 클레 고구마치즈퓨레", kind: "제품", brand: "푸드케어 클레", status: "주의", memo: "고구마·치즈는 통과했어요 · 유제품이 든 시판 퓨레라 처음엔 오전 소량부터" }
 ];
 
 var SEED_ITEMS = [
   { name: "푸드케어 클레 고구마치즈퓨레", loc: "냉동", made: "", exp: "2026-12-10", qty: 1, unit: "개", memo: "침 닿기 전 소분 냉동 시 ~12/10 · 개봉 냉장 시 3일" },
-  { name: "당근 큐브", loc: "냉동", made: "", exp: "", qty: null, unit: "개", memo: "11/26 첫 당근 · 냉동 14일 기준으로 기한을 넣어 주세요" },
+  { name: "당근 큐브", loc: "냉동", made: "", exp: "", qty: null, unit: "개", memo: "냉동 14일 기준으로 기한을 넣어 주세요" },
   { name: "소고기 미음 큐브", loc: "냉동", made: "", exp: "", qty: null, unit: "개", memo: "핏물 빼지 않고 조리 · 냉동 1주 안에" },
   { name: "퓨어잇 아기 쌀떡뻥", loc: "실온", made: "", exp: "", qty: null, unit: "봉", memo: "무염·무당" },
   { name: "에코 정제 카놀라유 500ml", loc: "실온", made: "", exp: "", qty: null, unit: "병", memo: "냉압착 정제 · 데운 이유식에 먹기 직전 2.5cc" }
@@ -1841,9 +1838,10 @@ function renderHome(){
     html += '<h2>' + esc(menuName(block)) + '</h2>';
     html += '<p class="sub">' + esc(block.b.name) + ' ' + block.idx + '일차 / ' + block.total + '일 중' + (block.b.planned ? ' · 예정' : '') + ' · ' + esc(block.b.color) + ' 재료</p>';
     html += '<div class="menu-row">';
+    var isEgg = block.b.name === "달걀노른자";
     html += '<div><b>30~40g</b><span>쌀·오트밀 미음</span></div>';
     html += '<div><b>10~15g</b><span>소고기</span></div>';
-    html += '<div><b>10~15g</b><span>' + esc(block.b.name) + '</span></div>';
+    html += '<div><b>' + (isEgg ? "반 티스푼" : "10~15g") + '</b><span>' + esc(block.b.name) + (isEgg ? " 완숙" : "") + '</span></div>';
     html += '</div>';
     html += '<p class="tip">' + esc(block.b.note) + ' · 한 끼 50~70g, 데운 뒤 카놀라유 2.5cc</p>';
     var next = block.idx < block.total
@@ -1872,6 +1870,7 @@ function renderHome(){
       html += '</div>';
     }
     html += '<p class="tip">알러지 탭에서 새 재료를 추가하면 여기 메뉴에 바로 반영돼요.</p>';
+    html += '<div class="actions" style="margin-top:10px"><button type="button" class="btn small" onclick="__juwon.goAllergyAdd()">＋ 새 재료 추가하기</button></div>';
   }
   html += '</div>';
 
@@ -2235,6 +2234,12 @@ function renderFoodHint(){
     html += '<span class="hint-name">' + (level === "danger" ? "⛔ " : "📖 ") + esc(f.name) + '</span>';
     html += '<span class="hint-line"><b>권장 시기</b> · ' + esc(f.when || "백과 참고") + (f.cat ? ' <span class="small">(' + esc(f.cat) + ')</span>' : "") + '</span>';
     html += '<span class="hint-line"><b>핵심</b> · ' + esc(f.desc || "") + '</span>';
+    var mine = allergyMatches(f.name);
+    if(mine.length){
+      html += '<span class="hint-line"><b>내 기록</b> · ' + mine.map(function(a){
+        return esc(shortParen(a.name)) + ' ' + esc(a.status) + (a.start ? ' (' + esc(a.start) + '~' + esc(a.end || '') + ')' : '');
+      }).join(', ') + '</span>';
+    }
   } else {
     html += '<span class="hint-name">' + (level === "danger" ? "⛔ " : "⚠️ ") + esc(typed) + '</span>';
   }
@@ -2245,6 +2250,21 @@ function renderFoodHint(){
   box.innerHTML = html;
 }
 
+function shortParen(n){ var m = /\(([^)]+)\)/.exec(n || ""); return m ? m[1] : (n || ""); }
+function allergyMatches(name){
+  var fn = (name || "").replace(/\s/g, "");
+  if(!fn) return [];
+  return data.allergy.filter(function(a){
+    if(a.kind === "제품") return false;
+    var an = (a.name || "").replace(/\s/g, "");
+    return an && (an === fn || an.indexOf(fn) >= 0 || fn.indexOf(an) >= 0);
+  });
+}
+function statusPillsHtml(name){
+  return allergyMatches(name).map(function(a){
+    return '<span class="pill ' + (STATUS_PILL[a.status] || "gray") + '">' + esc(shortParen(a.name)) + ' · ' + esc(a.status) + '</span>';
+  }).join(" ");
+}
 function renderFoodResults(q){
   var box = $("foodResults");
   var query = (q || "").trim();
@@ -2260,7 +2280,8 @@ function renderFoodResults(q){
     return;
   }
   box.innerHTML = hits.map(function(f, i){
-    return '<div class="food-res"><div class="body"><div class="nm">' + esc(f.name) + ' <span class="pill gray">' + esc(f.cat || "") + '</span> <span class="pill mint">' + esc(f.when || "") + '</span></div>' +
+    var pills = statusPillsHtml(f.name);
+    return '<div class="food-res"><div class="body"><div class="nm">' + esc(f.name) + ' <span class="pill gray">' + esc(f.cat || "") + '</span> <span class="pill mint">' + esc(f.when || "") + '</span>' + (pills ? ' ' + pills : '') + '</div>' +
       '<div class="desc">' + esc(f.desc || "") + '</div></div>' +
       '<div class="side"><button type="button" class="mini-btn" data-food="' + i + '">추가</button></div></div>';
   }).join("");
@@ -2674,6 +2695,13 @@ window.__juwon = {
   goLog: function(){ showTab("log"); },
   goFridge: function(){ showTab("fridge"); },
   goAllergy: function(){ showTab("allergy"); },
+  goAllergyAdd: function(){
+    showTab("allergy");
+    resetAllergyForm();
+    $("allergyFormBox").open = true;
+    $("allergyFormBox").scrollIntoView({ behavior: "smooth", block: "start" });
+    $("aName").focus();
+  },
   editLog: editLog,
   delLog: delLog,
   editAllergy: editAllergy,
